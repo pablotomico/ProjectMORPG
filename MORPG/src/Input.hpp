@@ -7,7 +7,7 @@
 
 class Input : public Observer {
 public:
-	Input(MessageSystem* l_messageSystem, GameObjectContainer* l_gameObjects);
+	Input(MessageSystem* l_messageSystem);
 	~Input();
 	void HandleEvent(sf::Event l_event);
 
@@ -15,6 +15,5 @@ protected:
 	void Notify(Message message);
 
 private:
-	GameObjectContainer* m_gameObjects;
 	std::unordered_map<KeyCode, bool> m_keysDown;
 };

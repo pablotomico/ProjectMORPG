@@ -23,9 +23,8 @@ public:
 	bool IsDrawable();
 	bool IsControllable();
 
-	virtual void OnKeyDown(KeyCode l_keyCode) {}
-	virtual void OnKey(KeyCode l_keyCode) {}
-	virtual void OnKeyUp(KeyCode l_keyCode) {}
+	virtual void Move(float l_x, float l_y) {}
+	virtual void Move(sf::Vector2f l_move) {}
 private:
 	GameObjectID m_id;
 

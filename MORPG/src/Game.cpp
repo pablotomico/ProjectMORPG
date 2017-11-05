@@ -3,7 +3,8 @@
 #include "Input.hpp"
 
 Game::Game()
-	: m_inputSystem(&m_messageSystem, &m_gameObjects)
+	: m_inputSystem(&m_messageSystem)
+	, m_controlSystem(&m_messageSystem, &m_gameObjects, &m_clock)
 	, m_window(&m_messageSystem, WINDOW_TITLE, sf::Vector2u(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), &m_inputSystem)
 	, m_nextAvailableID(0) {}
 
@@ -31,7 +32,6 @@ void Game::Init() {
 
 void Game::Update() {
 	m_window.Update();
-
 	m_messageSystem.DispatchMessages();
 }
 

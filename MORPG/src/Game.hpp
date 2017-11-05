@@ -5,6 +5,7 @@
 #include "Window.hpp"
 #include "GameObject.hpp"
 #include "Input.hpp"
+#include "Control.hpp"
 
 class Game {
 
@@ -31,6 +32,7 @@ private:
 	MessageSystem m_messageSystem;
 	Window m_window;
 	Input m_inputSystem;
+	Control m_controlSystem;
 
 	GameObjectID m_nextAvailableID;
 	GameObjectContainer m_gameObjects;

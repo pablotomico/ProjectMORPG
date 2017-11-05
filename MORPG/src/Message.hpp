@@ -11,6 +11,7 @@ enum  MessageType {
 	String,
 	Int,
 	KeyPressed,
+	KeyHold,
 	KeyReleased
 	// TODO: Come up with more types
 };
