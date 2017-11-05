@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/System.hpp>
+#include "MessageSystem.hpp"
 #include "Window.hpp"
 
 
@@ -22,6 +23,7 @@ private:
 	void RestartClock();
 
 private:
+	MessageSystem m_messageSystem;
 	Window m_window;
 
 	sf::Clock m_clock;

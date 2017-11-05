@@ -1,9 +1,9 @@
 #pragma once
 
 enum System {
-	Input = 0,
-	Window,
-	Render,
-	Resources,
-	Network
+	S_Input = 0,
+	S_Window,
+	S_Render,
+	S_Resources,
+	S_Network
 };

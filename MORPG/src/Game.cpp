@@ -1,7 +1,7 @@
 #include "Game.hpp"
 #include "Definitions.hpp"
 
-Game::Game() : m_window(WINDOW_TITLE, sf::Vector2u(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT)){
+Game::Game() : m_window(&m_messageSystem, WINDOW_TITLE, sf::Vector2u(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT)){
 
 }
 

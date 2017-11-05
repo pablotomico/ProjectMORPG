@@ -13,14 +13,13 @@ void MessageSystem::RemoveObserver(System l_system) {
 }
 
 void MessageSystem::SendMessage(Message l_message) {
-	m_msgQueue.push_back(l_message);
+	m_msgQueue.push(l_message);
 }
 
 void MessageSystem::DispatchMessages() {
 	while (!m_msgQueue.empty()) {
-		/*Message msg = m_msgQueue.front();
-		m_msgQueue.pop_front();
-
-		(m_observers[msg.m_systemReceiver])(msg);*/
+		Message msg = m_msgQueue.front();
+		m_msgQueue.pop();
+		(m_observers[msg.m_systemReceiver])(msg);
 	}
 }

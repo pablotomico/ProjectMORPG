@@ -4,10 +4,12 @@
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>
 
-class Window {
+#include "Observer.hpp"
+
+class Window : public Observer {
 
 public:
-	Window(const std::string& l_title, const sf::Vector2u& l_size);
+	Window(MessageSystem* l_messageSystem, const std::string& l_title, const sf::Vector2u& l_size);
 	~Window();
 
 	void BeginDraw(); // Clear the window.
@@ -24,6 +26,9 @@ public:
 
 	sf::Vector2u GetWindowSize();
 	sf::RenderWindow* GetRenderWindow();
+
+protected:
+	void Notify(Message message);
 
 private:
 	void Setup(const std::string l_title, const sf::Vector2u& l_size);

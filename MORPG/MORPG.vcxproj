@@ -164,8 +164,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\Message.cpp" />
     <ClCompile Include="src\MessageSystem.cpp" />
     <ClCompile Include="src\MORPG.cpp" />
+    <ClCompile Include="src\Observer.cpp" />
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>

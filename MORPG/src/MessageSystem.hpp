@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <queue>
 
+#include "Message.hpp"
 #include "Observer.hpp"
 
 class MessageSystem {
@@ -19,5 +20,5 @@ public:
 
 private:
 	std::unordered_map<System, Callback> m_observers;
-	std::deque<Message> m_msgQueue;
+	std::queue<Message> m_msgQueue;
 };

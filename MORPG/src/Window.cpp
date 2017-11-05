@@ -1,8 +1,9 @@
 #include <iostream>
 #include "Window.hpp"
 #include "Definitions.hpp"
+#include "MessageSystem.hpp"
 
-Window::Window(const std::string & l_title, const sf::Vector2u & l_size) {
+Window::Window(MessageSystem* l_messageSystem, const std::string & l_title, const sf::Vector2u & l_size) : Observer(System::S_Window, l_messageSystem) {
 	Setup(l_title, l_size);
 }
 
@@ -55,6 +56,15 @@ sf::Vector2u Window::GetWindowSize() {
 
 sf::RenderWindow* Window::GetRenderWindow() {
 	return &m_window;
+}
+
+void Window::Notify(Message message) {
+	if (message.m_type == MessageType::KeyPressed) {
+		// TODO: Set up enum with inputs
+		if (message.m_keyCode == sf::Keyboard::Escape) {
+			Close();
+		}
+	}
 }
 
 void Window::Setup(const std::string l_title, const sf::Vector2u & l_size) {
