@@ -3,7 +3,9 @@
 #include "Definitions.hpp"
 #include "MessageSystem.hpp"
 
-Window::Window(MessageSystem* l_messageSystem, const std::string & l_title, const sf::Vector2u & l_size) : Observer(System::S_Window, l_messageSystem) {
+Window::Window(MessageSystem* l_messageSystem, const std::string& l_title, const sf::Vector2u& l_size, Input* l_inputSystem)
+	: Observer(System::S_Window, l_messageSystem) {
+	m_inputSystem = l_inputSystem;
 	Setup(l_title, l_size);
 }
 
@@ -29,9 +31,8 @@ void Window::Update() {
 		} else if (event.type == sf::Event::GainedFocus) {
 			m_isFocused = true;
 		}
-		// TODO: Probably call inputsystem.HandleEvent(event)
+		m_inputSystem->HandleEvent(event);
 	}
-	// TODO: Probably call inputsystem.Update();
 }
 
 bool Window::IsDone() {
@@ -60,7 +61,7 @@ sf::RenderWindow* Window::GetRenderWindow() {
 
 void Window::Notify(Message message) {
 	if (message.m_type == MessageType::KeyPressed) {
-		// TODO: Set up enum with inputs
+		
 		if (message.m_keyCode == sf::Keyboard::Escape) {
 			Close();
 		}

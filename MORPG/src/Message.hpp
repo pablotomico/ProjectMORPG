@@ -4,6 +4,7 @@
 #include <SFML/Window.hpp>
 #include "Systems.hpp"
 
+#define MULTICAST -1
 
 enum  MessageType {
 	String,

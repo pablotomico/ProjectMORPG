@@ -1,7 +1,7 @@
 #include "Game.hpp"
 #include "Definitions.hpp"
 
-Game::Game() : m_window(&m_messageSystem, WINDOW_TITLE, sf::Vector2u(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT)){
+Game::Game() : m_inputSystem(&m_messageSystem), m_window(&m_messageSystem, WINDOW_TITLE, sf::Vector2u(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), &m_inputSystem){
 
 }
 
@@ -21,6 +21,8 @@ sf::Time Game::GetElapsedTime() {
 
 void Game::Update() {
 	m_window.Update();
+
+	m_messageSystem.DispatchMessages();
 }
 
 void Game::Render() {

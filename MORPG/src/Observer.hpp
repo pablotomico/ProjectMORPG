@@ -10,7 +10,7 @@ using Callback = std::function<void(Message)>;
 
 class Observer {
 public:
-	Observer(System l_system, MessageSystem* l_messageSystem) : m_system(l_system), m_messageSystem(l_messageSystem) {}
+	Observer(System l_system, MessageSystem* l_messageSystem);
 
 protected:
 	Callback GetNotify() {

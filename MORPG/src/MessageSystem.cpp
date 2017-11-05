@@ -20,6 +20,12 @@ void MessageSystem::DispatchMessages() {
 	while (!m_msgQueue.empty()) {
 		Message msg = m_msgQueue.front();
 		m_msgQueue.pop();
-		(m_observers[msg.m_systemReceiver])(msg);
+		if (msg.m_systemReceiver == MULTICAST) {
+			for (auto& it = m_observers.begin(); it != m_observers.end(); it++) {
+				(m_observers[it->first])(msg);
+			}
+		} else {
+			(m_observers[msg.m_systemReceiver])(msg);
+		}
 	}
 }

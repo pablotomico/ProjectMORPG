@@ -25,6 +25,7 @@ private:
 private:
 	MessageSystem m_messageSystem;
 	Window m_window;
+	Input m_inputSystem;
 
 	sf::Clock m_clock;
 	sf::Time m_elapsed;

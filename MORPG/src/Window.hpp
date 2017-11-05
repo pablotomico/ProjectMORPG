@@ -5,11 +5,12 @@
 #include <SFML/Graphics.hpp>
 
 #include "Observer.hpp"
+#include "Input.hpp"
 
 class Window : public Observer {
 
 public:
-	Window(MessageSystem* l_messageSystem, const std::string& l_title, const sf::Vector2u& l_size);
+	Window(MessageSystem* l_messageSystem, const std::string& l_title, const sf::Vector2u& l_size, Input* l_inputSystem);
 	~Window();
 
 	void BeginDraw(); // Clear the window.
@@ -36,6 +37,8 @@ private:
 	void Destroy();
 
 private:
+	Input* m_inputSystem;
+
 	sf::RenderWindow m_window;
 	sf::Vector2u m_windowSize;
 	std::string m_windowTitle;
