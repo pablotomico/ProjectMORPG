@@ -2,6 +2,7 @@
 #include "Window.hpp"
 #include "Definitions.hpp"
 #include "MessageSystem.hpp"
+#include "Input.hpp"
 
 Window::Window(MessageSystem* l_messageSystem, const std::string& l_title, const sf::Vector2u& l_size, Input* l_inputSystem)
 	: Observer(System::S_Window, l_messageSystem) {

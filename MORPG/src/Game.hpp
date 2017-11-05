@@ -4,7 +4,7 @@
 #include "MessageSystem.hpp"
 #include "Window.hpp"
 #include "GameObject.hpp"
-
+#include "Input.hpp"
 
 class Game {
 
@@ -33,7 +33,7 @@ private:
 	Input m_inputSystem;
 
 	GameObjectID m_nextAvailableID;
-	std::unordered_map<GameObjectID, GameObject*> m_gameObjects;
+	GameObjectContainer m_gameObjects;
 
 
 	sf::Clock m_clock;

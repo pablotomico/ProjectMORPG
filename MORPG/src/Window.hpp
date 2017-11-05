@@ -5,7 +5,9 @@
 #include <SFML/Graphics.hpp>
 
 #include "Observer.hpp"
-#include "Input.hpp"
+
+
+class Input;
 
 class Window : public Observer {
 

@@ -9,7 +9,8 @@
 enum  MessageType {
 	String,
 	Int,
-	KeyPressed
+	KeyPressed,
+	KeyReleased
 	// TODO: Come up with more types
 };
 

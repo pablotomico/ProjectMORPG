@@ -1,5 +1,6 @@
 #pragma once
 
+#include <unordered_map>
 #include <SFML/Graphics.hpp>
 
 using GameObjectID = unsigned int;
@@ -33,3 +34,6 @@ private:
 	bool m_isDrawable;
 	bool m_isControllable;
 };
+
+
+using GameObjectContainer = std::unordered_map<GameObjectID, GameObject*>;

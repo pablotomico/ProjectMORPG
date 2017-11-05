@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include "Definitions.hpp"
+#include "Input.hpp"
 
 Game::Game()
 	: m_inputSystem(&m_messageSystem)
