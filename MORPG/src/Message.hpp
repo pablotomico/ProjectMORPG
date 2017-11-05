@@ -3,6 +3,7 @@
 #include <iostream>
 #include <SFML/Window.hpp>
 #include "Systems.hpp"
+#include "Definitions.hpp"
 
 #define MULTICAST -1
 
@@ -18,7 +19,7 @@ class Message {
 public:
 	Message(MessageType l_type, System l_systemReceiver);
 	Message(MessageType l_type, System l_systemReceiver, const std::string& l_string);
-	Message(MessageType l_type, System l_systemReceiver, sf::Keyboard::Key l_keyCode);
+	Message(MessageType l_type, System l_systemReceiver, KeyCode l_keyCode);
 
 	~Message();
 public:
@@ -27,6 +28,6 @@ public:
 	union {
 		std::string* m_string;
 		int m_integer;
-		sf::Keyboard::Key m_keyCode;
+		KeyCode m_keyCode;
 	};
 };

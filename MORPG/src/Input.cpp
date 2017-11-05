@@ -13,7 +13,7 @@ void Input::HandleEvent(sf::Event l_event) {
 	switch (l_event.type) {
 	case sf::Event::KeyPressed:
 		{
-			sf::Keyboard::Key code = l_event.key.code;
+			KeyCode code = l_event.key.code;
 
 			// Send message in multicast mode
 			Message msg(MessageType::KeyPressed, (System) MULTICAST, code);
@@ -40,7 +40,7 @@ void Input::HandleEvent(sf::Event l_event) {
 		break;
 	case sf::Event::KeyReleased:
 		{
-			sf::Keyboard::Key code = l_event.key.code;
+			KeyCode code = l_event.key.code;
 
 			// Send message in multicast mode
 			Message msg(MessageType::KeyReleased, (System) MULTICAST, code);

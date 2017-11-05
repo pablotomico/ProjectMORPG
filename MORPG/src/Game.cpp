@@ -3,7 +3,7 @@
 #include "Input.hpp"
 
 Game::Game()
-	: m_inputSystem(&m_messageSystem)
+	: m_inputSystem(&m_messageSystem, &m_gameObjects)
 	, m_window(&m_messageSystem, WINDOW_TITLE, sf::Vector2u(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), &m_inputSystem)
 	, m_nextAvailableID(0) {}
 

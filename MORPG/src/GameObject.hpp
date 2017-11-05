@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
+#include "Definitions.hpp"
 
 using GameObjectID = unsigned int;
 
@@ -22,9 +23,9 @@ public:
 	bool IsDrawable();
 	bool IsControllable();
 
-	virtual void OnKeyDown(sf::Keyboard::Key l_keyCode) {}
-	virtual void OnKey(sf::Keyboard::Key l_keyCode) {}
-	virtual void OnKeyUp(sf::Keyboard::Key l_keyCode) {}
+	virtual void OnKeyDown(KeyCode l_keyCode) {}
+	virtual void OnKey(KeyCode l_keyCode) {}
+	virtual void OnKeyUp(KeyCode l_keyCode) {}
 private:
 	GameObjectID m_id;
 

@@ -3,6 +3,7 @@
 #include <SFML/Window.hpp>
 #include "Observer.hpp"
 #include "GameObject.hpp"
+#include "Definitions.hpp"
 
 class Input : public Observer {
 public:
@@ -15,5 +16,5 @@ protected:
 
 private:
 	GameObjectContainer* m_gameObjects;
-	std::unordered_map<sf::Keyboard::Key, bool> m_keysDown;
+	std::unordered_map<KeyCode, bool> m_keysDown;
 };
