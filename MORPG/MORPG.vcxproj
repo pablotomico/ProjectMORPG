@@ -164,6 +164,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Message.cpp" />
     <ClCompile Include="src\MessageSystem.cpp" />
@@ -174,6 +175,7 @@
   <ItemGroup>
     <ClInclude Include="src\Definitions.hpp" />
     <ClInclude Include="src\Game.hpp" />
+    <ClInclude Include="src\GameObject.hpp" />
     <ClInclude Include="src\Input.hpp" />
     <ClInclude Include="src\Message.hpp" />
     <ClInclude Include="src\MessageSystem.hpp" />
