@@ -164,12 +164,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\MessageSystem.cpp" />
     <ClCompile Include="src\MORPG.cpp" />
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Definitions.hpp" />
     <ClInclude Include="src\Game.hpp" />
+    <ClInclude Include="src\Message.hpp" />
+    <ClInclude Include="src\MessageSystem.hpp" />
+    <ClInclude Include="src\Observer.hpp" />
+    <ClInclude Include="src\Systems.hpp" />
     <ClInclude Include="src\Window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
