@@ -22,7 +22,7 @@ void Window::EndDraw() {
 	m_window.display();
 }
 
-void Window::Update() {
+void Window::Update(float l_deltaTime) {
 	sf::Event event;
 	while (m_window.pollEvent(event)) {
 		if (event.type == sf::Event::Closed) {

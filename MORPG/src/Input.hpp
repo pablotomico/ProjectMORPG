@@ -10,6 +10,7 @@ public:
 	Input(MessageSystem* l_messageSystem);
 	~Input();
 	void HandleEvent(sf::Event l_event);
+	void Update(float l_deltaTime);
 
 protected:
 	void Notify(Message message);

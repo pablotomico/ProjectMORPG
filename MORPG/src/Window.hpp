@@ -18,7 +18,7 @@ public:
 	void BeginDraw(); // Clear the window.
 	void EndDraw(); // Display the changes.
 
-	void Update();
+	void Update(float l_deltaTime);
 
 	bool IsDone();
 	bool IsFocused();

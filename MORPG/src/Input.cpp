@@ -7,11 +7,14 @@ Input::~Input() {}
 
 void Input::Notify(Message message) {}
 
+void Input::Update(float l_deltaTime) {}
+
 void Input::HandleEvent(sf::Event l_event) {
 	switch (l_event.type) {
 	case sf::Event::KeyPressed:
 		{
 			KeyCode code = l_event.key.code;
+			//printf("[%d] ", code);
 
 			// Send message in multicast mode
 			if (m_keysDown[code]) {
@@ -40,3 +43,4 @@ void Input::HandleEvent(sf::Event l_event) {
 		break;
 	}
 }
+

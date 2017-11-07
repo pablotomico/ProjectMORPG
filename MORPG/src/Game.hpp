@@ -6,6 +6,8 @@
 #include "GameObject.hpp"
 #include "Input.hpp"
 #include "Control.hpp"
+#include "Renderer.hpp"
+#include "TextureManager.hpp"
 
 class Game {
 
@@ -33,6 +35,8 @@ private:
 	Window m_window;
 	Input m_inputSystem;
 	Control m_controlSystem;
+	Renderer m_renderSystem;
+	TextureManager m_textureManager;
 
 	GameObjectID m_nextAvailableID;
 	GameObjectContainer m_gameObjects;
