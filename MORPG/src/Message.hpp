@@ -10,9 +10,10 @@
 enum  MessageType {
 	String,
 	Int,
-	KeyPressed,
-	KeyHold,
-	KeyReleased
+	M_KeyPressed,
+	M_KeyHold,
+	M_KeyReleased,
+	M_GameObject
 	// TODO: Come up with more types
 };
 
@@ -30,5 +31,6 @@ public:
 		std::string* m_string;
 		int m_integer;
 		KeyCode m_keyCode;
+		sf::Vector2f m_position;
 	};
 };

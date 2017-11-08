@@ -45,10 +45,10 @@
     <ClCompile Include="src\TextureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\InputControl.cpp">
+    <ClCompile Include="src\GameObjectManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameObjectManager.cpp">
+    <ClCompile Include="src\Control.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -89,10 +89,10 @@
     <ClInclude Include="src\Utilities.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\InputControl.hpp">
+    <ClInclude Include="src\GameObjectManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameObjectManager.hpp">
+    <ClInclude Include="src\Control.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

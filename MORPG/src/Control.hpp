@@ -4,10 +4,10 @@
 #include "Observer.hpp"
 #include "Definitions.hpp"
 
-class InputControl : public Observer {
+class Control : public Observer {
 public:
-	InputControl(MessageSystem* l_messageSystem, GameObjectContainer* l_gameObjects);
-	~InputControl();
+	Control(MessageSystem* l_messageSystem, GameObjectContainer* l_gameObjects);
+	~Control();
 
 	void SetControlledGameObject(GameObjectID l_controlledGameObject);
 	GameObjectID GetControlledGameObject();

@@ -18,10 +18,10 @@ void Input::HandleEvent(sf::Event l_event) {
 
 			// Send message in multicast mode
 			if (m_keysDown[code]) {
-				Message msg(MessageType::KeyHold, (System) MULTICAST, code);
+				Message msg(MessageType::M_KeyHold, (System) MULTICAST, code);
 				Send(msg);
 			} else {
-				Message msg(MessageType::KeyPressed, (System) MULTICAST, code);
+				Message msg(MessageType::M_KeyPressed, (System) MULTICAST, code);
 				Send(msg);
 
 				// Set Key to pressed for future use (separation between GetKeyDown and GetKey)
@@ -34,7 +34,7 @@ void Input::HandleEvent(sf::Event l_event) {
 			KeyCode code = l_event.key.code;
 
 			// Send message in multicast mode
-			Message msg(MessageType::KeyReleased, (System) MULTICAST, code);
+			Message msg(MessageType::M_KeyReleased, (System) MULTICAST, code);
 			Send(msg);
 
 			// Set keycode as released

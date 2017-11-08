@@ -69,7 +69,7 @@ sf::RenderWindow* Window::GetRenderWindow() {
 }
 
 void Window::Notify(Message l_message) {
-	if (l_message.m_type == MessageType::KeyPressed) {
+	if (l_message.m_type == MessageType::M_KeyPressed) {
 		
 		if (l_message.m_keyCode == sf::Keyboard::Escape) {
 			Close();

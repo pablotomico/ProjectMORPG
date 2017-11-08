@@ -5,7 +5,7 @@
 #include "Window.hpp"
 #include "GameObject.hpp"
 #include "Input.hpp"
-#include "InputControl.hpp"
+#include "Control.hpp"
 #include "Renderer.hpp"
 #include "TextureManager.hpp"
 #include "GameObjectManager.hpp"
@@ -35,7 +35,7 @@ private:
 	GameObjectContainer* m_gameObjects;
 	Window m_window;
 	Input m_inputSystem;
-	InputControl m_inputControlSystem;
+	Control m_controlSystem;
 	Renderer m_renderSystem;
 	TextureManager m_textureManager;
 

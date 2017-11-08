@@ -1,23 +1,23 @@
-#include "InputControl.hpp"
+#include "Control.hpp"
 
-InputControl::InputControl(MessageSystem * l_messageSystem, GameObjectContainer* l_gameObjects)
+Control::Control(MessageSystem * l_messageSystem, GameObjectContainer* l_gameObjects)
 	: Observer(System::S_InputControl, l_messageSystem), m_controlledGameObject(-1), m_movement(0, 0) {
 	m_gameObjects = l_gameObjects;
 }
 
-InputControl::~InputControl() {}
+Control::~Control() {}
 
-void InputControl::SetControlledGameObject(GameObjectID l_controlledGameObject) {
+void Control::SetControlledGameObject(GameObjectID l_controlledGameObject) {
 	if (m_gameObjects->at(l_controlledGameObject)->IsControllable()) {
 		m_controlledGameObject = l_controlledGameObject;
 	}
 }
 
-GameObjectID InputControl::GetControlledGameObject() {
+GameObjectID Control::GetControlledGameObject() {
 	return m_controlledGameObject;
 }
 
-void InputControl::Update(float l_deltaTime) {
+void Control::Update(float l_deltaTime) {
 	if (m_moving) {
 		GameObject* gameObject = m_gameObjects->at(m_controlledGameObject);
 		//printf("Movement (%f, %f)\n", m_movement.x, m_movement.y);
@@ -25,13 +25,13 @@ void InputControl::Update(float l_deltaTime) {
 	}
 }
 
-void InputControl::Notify(Message l_message) {
+void Control::Notify(Message l_message) {
 	if (m_controlledGameObject == -1) {
 		return;
 	}
 
 	switch (l_message.m_type) {
-	case MessageType::KeyPressed:
+	case MessageType::M_KeyPressed:
 		{
 			GameObject* gameObject = m_gameObjects->at(m_controlledGameObject);
 
@@ -50,9 +50,9 @@ void InputControl::Notify(Message l_message) {
 			UpdateMovement();
 		}
 		break;
-	case MessageType::KeyHold:
+	case MessageType::M_KeyHold:
 		break;
-	case MessageType::KeyReleased:
+	case MessageType::M_KeyReleased:
 		if (l_message.m_keyCode == sf::Keyboard::W) {
 			m_movement.y = 0;
 		}
@@ -76,7 +76,7 @@ void InputControl::Notify(Message l_message) {
 
 }
 
-void InputControl::UpdateMovement() {
+void Control::UpdateMovement() {
 	if (m_movement.x == 0 && m_movement.y == 0) {
 		m_moving = false;
 		return;

@@ -6,7 +6,7 @@ Game::Game()
 	: m_inputSystem(&m_messageSystem)
 	, m_gameObjectManager(&m_messageSystem, &m_textureManager)
 	, m_gameObjects(m_gameObjectManager.GetGameObjectContainer())
-	, m_inputControlSystem(&m_messageSystem, m_gameObjects)
+	, m_controlSystem(&m_messageSystem, m_gameObjects)
 	, m_window(&m_messageSystem, WINDOW_TITLE, sf::Vector2u(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), &m_inputSystem)
 	, m_renderSystem(&m_messageSystem, m_gameObjects, &m_window) {
 }
@@ -32,18 +32,18 @@ void Game::Init() {
 	// Init GameObjects
 	GameObjectID id = m_gameObjectManager.CreateGameObject(true, true, "intro.png");
 
-	m_inputControlSystem.SetControlledGameObject(id);
+	m_controlSystem.SetControlledGameObject(id);
 }
 
 void Game::Update() {
 	float deltaTime = m_elapsed.asSeconds() * 1000;
 	m_window.Update(deltaTime);
 	m_messageSystem.DispatchMessages();
-	m_inputControlSystem.Update(deltaTime);
+	m_controlSystem.Update(deltaTime);
 	m_renderSystem.Update(deltaTime);
 
 	if (CAMERA_FOLLOW) {
-		m_window.UpdateCamera(m_gameObjects->at(m_inputControlSystem.GetControlledGameObject()));
+		m_window.UpdateCamera(m_gameObjects->at(m_controlSystem.GetControlledGameObject()));
 	}
 }
 
