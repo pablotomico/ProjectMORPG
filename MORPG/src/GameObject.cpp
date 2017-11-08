@@ -23,6 +23,10 @@ sf::Sprite& GameObject::GetSprite() {
 	return m_sprite;
 }
 
+void GameObject::SetPosition(const sf::Vector2f & l_position) {
+	m_position = l_position;
+}
+
 void GameObject::SetSprite(const std::string& l_texture) {
 	if (m_textureManager->RequireTexture(l_texture)) {
 		sf::Texture* texture = m_textureManager->GetTexture(l_texture);

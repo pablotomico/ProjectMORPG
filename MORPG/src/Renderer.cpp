@@ -35,4 +35,4 @@ void Renderer::Render() {
 	}
 }
 
-void Renderer::Notify(Message message) {}
+void Renderer::Notify(Message l_message) {}

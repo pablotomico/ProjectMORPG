@@ -1,19 +1,23 @@
-#include "Control.hpp"
+#include "InputControl.hpp"
 
-Control::Control(MessageSystem * l_messageSystem, GameObjectContainer* l_gameObjects)
-	: Observer(System::S_Control, l_messageSystem), m_controlledGameObject(-1), m_movement(0, 0) {
+InputControl::InputControl(MessageSystem * l_messageSystem, GameObjectContainer* l_gameObjects)
+	: Observer(System::S_InputControl, l_messageSystem), m_controlledGameObject(-1), m_movement(0, 0) {
 	m_gameObjects = l_gameObjects;
 }
 
-Control::~Control() {}
+InputControl::~InputControl() {}
 
-void Control::SetControlledGameObject(GameObjectID l_controlledGameObject) {
+void InputControl::SetControlledGameObject(GameObjectID l_controlledGameObject) {
 	if (m_gameObjects->at(l_controlledGameObject)->IsControllable()) {
 		m_controlledGameObject = l_controlledGameObject;
 	}
 }
 
-void Control::Update(float l_deltaTime) {
+GameObjectID InputControl::GetControlledGameObject() {
+	return m_controlledGameObject;
+}
+
+void InputControl::Update(float l_deltaTime) {
 	if (m_moving) {
 		GameObject* gameObject = m_gameObjects->at(m_controlledGameObject);
 		//printf("Movement (%f, %f)\n", m_movement.x, m_movement.y);
@@ -21,25 +25,25 @@ void Control::Update(float l_deltaTime) {
 	}
 }
 
-void Control::Notify(Message message) {
+void InputControl::Notify(Message l_message) {
 	if (m_controlledGameObject == -1) {
 		return;
 	}
 
-	switch (message.m_type) {
+	switch (l_message.m_type) {
 	case MessageType::KeyPressed:
 		{
 			GameObject* gameObject = m_gameObjects->at(m_controlledGameObject);
 
-			if (message.m_keyCode == sf::Keyboard::W) {
+			if (l_message.m_keyCode == sf::Keyboard::W) {
 				m_movement.y = -1;
-			} else if (message.m_keyCode == sf::Keyboard::S) {
+			} else if (l_message.m_keyCode == sf::Keyboard::S) {
 				m_movement.y = 1;
 			}
 
-			if (message.m_keyCode == sf::Keyboard::A) {
+			if (l_message.m_keyCode == sf::Keyboard::A) {
 				m_movement.x = -1;
-			} else if (message.m_keyCode == sf::Keyboard::D) {
+			} else if (l_message.m_keyCode == sf::Keyboard::D) {
 				m_movement.x = 1;
 			}
 
@@ -49,17 +53,17 @@ void Control::Notify(Message message) {
 	case MessageType::KeyHold:
 		break;
 	case MessageType::KeyReleased:
-		if (message.m_keyCode == sf::Keyboard::W) {
+		if (l_message.m_keyCode == sf::Keyboard::W) {
 			m_movement.y = 0;
 		}
-		if (message.m_keyCode == sf::Keyboard::S) {
+		if (l_message.m_keyCode == sf::Keyboard::S) {
 			m_movement.y = 0;
 		}
 
-		if (message.m_keyCode == sf::Keyboard::A) {
+		if (l_message.m_keyCode == sf::Keyboard::A) {
 			m_movement.x = 0;
 		}
-		if (message.m_keyCode == sf::Keyboard::D) {
+		if (l_message.m_keyCode == sf::Keyboard::D) {
 			m_movement.x = 0;
 		}
 
@@ -72,7 +76,7 @@ void Control::Notify(Message message) {
 
 }
 
-void Control::UpdateMovement() {
+void InputControl::UpdateMovement() {
 	if (m_movement.x == 0 && m_movement.y == 0) {
 		m_moving = false;
 		return;
@@ -96,5 +100,5 @@ void Control::UpdateMovement() {
 	m_movement.x /= magnitude;
 	m_movement.y /= magnitude;
 
-	m_movement *= (float) MOVEMENT_SPEED;
+	m_movement *= (float) MOVEMENT_SPEED / 10;
 }

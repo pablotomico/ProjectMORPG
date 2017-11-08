@@ -14,7 +14,7 @@ public:
 	void Render();
 
 protected:
-	void Notify(Message message);
+	void Notify(Message l_message);
 
 private:
 	GameObjectContainer* m_gameObjects;

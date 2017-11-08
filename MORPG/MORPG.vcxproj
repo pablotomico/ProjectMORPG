@@ -163,7 +163,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Control.cpp" />
+    <ClCompile Include="src\GameObjectManager.cpp" />
+    <ClCompile Include="src\InputControl.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Input.cpp" />
@@ -176,7 +177,8 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Control.hpp" />
+    <ClInclude Include="src\GameObjectManager.hpp" />
+    <ClInclude Include="src\InputControl.hpp" />
     <ClInclude Include="src\Definitions.hpp" />
     <ClInclude Include="src\Game.hpp" />
     <ClInclude Include="src\GameObject.hpp" />

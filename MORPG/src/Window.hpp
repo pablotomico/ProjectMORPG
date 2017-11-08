@@ -5,6 +5,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Observer.hpp"
+#include "GameObject.hpp"
 
 
 class Input;
@@ -26,12 +27,13 @@ public:
 	void Close();
 
 	void Draw(sf::Drawable& l_drawable);
+	void UpdateCamera(GameObject* l_target);
 
 	sf::Vector2u GetWindowSize();
 	sf::RenderWindow* GetRenderWindow();
 
 protected:
-	void Notify(Message message);
+	void Notify(Message l_message);
 
 private:
 	void Setup(const std::string l_title, const sf::Vector2u& l_size);

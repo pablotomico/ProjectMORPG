@@ -21,6 +21,7 @@ public:
 	sf::Vector2f GetPosition();
 	sf::Sprite& GetSprite();
 
+	void SetPosition(const sf::Vector2f& l_position);
 	void SetSprite(const std::string& l_texture);
 
 	bool IsDrawable();
@@ -35,6 +36,7 @@ public:
 	virtual void Move(sf::Vector2f l_move) {
 		Move(l_move.x, l_move.y);
 	}
+
 private:
 	GameObjectID m_id;
 

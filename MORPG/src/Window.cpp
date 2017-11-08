@@ -52,6 +52,14 @@ void Window::Draw(sf::Drawable & l_drawable) {
 	m_window.draw(l_drawable);
 }
 
+void Window::UpdateCamera(GameObject * l_target) {
+	sf::View view = m_window.getView();
+
+	view.setCenter(l_target->GetPosition());
+
+	m_window.setView(view);
+}
+
 sf::Vector2u Window::GetWindowSize() {
 	return m_windowSize;
 }
@@ -60,10 +68,10 @@ sf::RenderWindow* Window::GetRenderWindow() {
 	return &m_window;
 }
 
-void Window::Notify(Message message) {
-	if (message.m_type == MessageType::KeyPressed) {
+void Window::Notify(Message l_message) {
+	if (l_message.m_type == MessageType::KeyPressed) {
 		
-		if (message.m_keyCode == sf::Keyboard::Escape) {
+		if (l_message.m_keyCode == sf::Keyboard::Escape) {
 			Close();
 		}
 	}

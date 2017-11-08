@@ -5,9 +5,10 @@
 #include "Window.hpp"
 #include "GameObject.hpp"
 #include "Input.hpp"
-#include "Control.hpp"
+#include "InputControl.hpp"
 #include "Renderer.hpp"
 #include "TextureManager.hpp"
+#include "GameObjectManager.hpp"
 
 class Game {
 
@@ -18,8 +19,6 @@ public:
 	void Play();
 	
 	sf::Time GetElapsedTime();
-
-	void AddGameObject(GameObject* l_gameObject);
 
 private:
 	void Init();
@@ -32,14 +31,13 @@ private:
 
 private:
 	MessageSystem m_messageSystem;
+	GameObjectManager m_gameObjectManager;
+	GameObjectContainer* m_gameObjects;
 	Window m_window;
 	Input m_inputSystem;
-	Control m_controlSystem;
+	InputControl m_inputControlSystem;
 	Renderer m_renderSystem;
 	TextureManager m_textureManager;
-
-	GameObjectID m_nextAvailableID;
-	GameObjectContainer m_gameObjects;
 
 
 	sf::Clock m_clock;

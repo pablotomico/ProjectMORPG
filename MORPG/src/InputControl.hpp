@@ -4,17 +4,18 @@
 #include "Observer.hpp"
 #include "Definitions.hpp"
 
-class Control : public Observer {
+class InputControl : public Observer {
 public:
-	Control(MessageSystem* l_messageSystem, GameObjectContainer* l_gameObjects);
-	~Control();
+	InputControl(MessageSystem* l_messageSystem, GameObjectContainer* l_gameObjects);
+	~InputControl();
 
 	void SetControlledGameObject(GameObjectID l_controlledGameObject);
+	GameObjectID GetControlledGameObject();
 
 	void Update(float l_deltaTime);
 
 protected:
-	void Notify(Message message);
+	void Notify(Message l_message);
 	void UpdateMovement();
 
 private:
