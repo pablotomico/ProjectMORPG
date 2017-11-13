@@ -14,4 +14,7 @@
 // Control
 #define MOVEMENT_SPEED 1
 
+// Network
+#define NETWORK_TIMESTEP 2
+
 using KeyCode = sf::Keyboard::Key;

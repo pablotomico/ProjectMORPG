@@ -42,4 +42,7 @@ private:
 
 	sf::Clock m_clock;
 	sf::Time m_elapsed;
+
+	sf::Clock m_networkClock;
+	sf::Time m_networkTime;
 };

@@ -57,6 +57,10 @@ void Game::Render() {
 
 void Game::LateUpdate() {
 	RestartClock();
+	if (m_networkTime.asSeconds() >= NETWORK_TIMESTEP) {
+		printf("NETWORK!\n");
+		m_networkTime -= sf::seconds(NETWORK_TIMESTEP);
+	}
 }
 
 void Game::End() {
@@ -65,6 +69,7 @@ void Game::End() {
 
 void Game::RestartClock() {
 	m_elapsed = m_clock.restart();
+	m_networkTime += m_networkClock.restart();
 }
 
 
