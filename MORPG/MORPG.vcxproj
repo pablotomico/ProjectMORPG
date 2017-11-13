@@ -171,6 +171,7 @@
     <ClCompile Include="src\Message.cpp" />
     <ClCompile Include="src\MessageSystem.cpp" />
     <ClCompile Include="src\MORPG.cpp" />
+    <ClCompile Include="src\Network.cpp" />
     <ClCompile Include="src\Observer.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="src\Input.hpp" />
     <ClInclude Include="src\Message.hpp" />
     <ClInclude Include="src\MessageSystem.hpp" />
+    <ClInclude Include="src\Network.hpp" />
     <ClInclude Include="src\Observer.hpp" />
     <ClInclude Include="src\Renderer.hpp" />
     <ClInclude Include="src\Systems.hpp" />

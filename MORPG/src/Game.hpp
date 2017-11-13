@@ -9,6 +9,7 @@
 #include "Renderer.hpp"
 #include "TextureManager.hpp"
 #include "GameObjectManager.hpp"
+#include "Network.hpp"
 
 class Game {
 
@@ -38,6 +39,7 @@ private:
 	Control m_controlSystem;
 	Renderer m_renderSystem;
 	TextureManager m_textureManager;
+	Network m_networkSystem;
 
 
 	sf::Clock m_clock;

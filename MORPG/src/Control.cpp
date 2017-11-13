@@ -22,6 +22,9 @@ void Control::Update(float l_deltaTime) {
 		GameObject* gameObject = m_gameObjects->at(m_controlledGameObject);
 		//printf("Movement (%f, %f)\n", m_movement.x, m_movement.y);
 		gameObject->Move(m_movement * l_deltaTime);
+		sf::Time time; // TODO: change this
+		Message message(MessageType::M_GameObject, System::S_Network, gameObject->GetGameObjectID(), gameObject->GetPosition(), time);
+		Send(message);
 	}
 }
 

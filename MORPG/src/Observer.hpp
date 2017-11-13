@@ -21,7 +21,6 @@ protected:
 	}
 	void Send(Message l_message);
 
-	virtual void Update(float l_deltaTime) {}
 	virtual void Notify(Message message) {
 		std::cout << "Notify function not implemented" << std::endl;
 	}

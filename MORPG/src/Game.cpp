@@ -8,8 +8,8 @@ Game::Game()
 	, m_gameObjects(m_gameObjectManager.GetGameObjectContainer())
 	, m_controlSystem(&m_messageSystem, m_gameObjects)
 	, m_window(&m_messageSystem, WINDOW_TITLE, sf::Vector2u(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), &m_inputSystem)
-	, m_renderSystem(&m_messageSystem, m_gameObjects, &m_window) {
-}
+	, m_renderSystem(&m_messageSystem, m_gameObjects, &m_window)
+	, m_networkSystem(&m_messageSystem) {}
 
 Game::~Game() {}
 
@@ -40,6 +40,8 @@ void Game::Update() {
 	m_window.Update(deltaTime);
 	m_messageSystem.DispatchMessages();
 	m_controlSystem.Update(deltaTime);
+	m_networkSystem.Update();
+
 	m_renderSystem.Update(deltaTime);
 
 	if (CAMERA_FOLLOW) {
@@ -58,13 +60,13 @@ void Game::Render() {
 void Game::LateUpdate() {
 	RestartClock();
 	if (m_networkTime.asSeconds() >= NETWORK_TIMESTEP) {
-		printf("NETWORK!\n");
+		// TODO: something here
 		m_networkTime -= sf::seconds(NETWORK_TIMESTEP);
 	}
 }
 
 void Game::End() {
-	
+
 }
 
 void Game::RestartClock() {
