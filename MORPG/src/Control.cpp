@@ -1,7 +1,7 @@
 #include "Control.hpp"
 
 Control::Control(MessageSystem * l_messageSystem, GameObjectContainer* l_gameObjects)
-	: Observer(System::S_InputControl, l_messageSystem), m_controlledGameObject(-1), m_movement(0, 0) {
+	: Observer(System::S_Control, l_messageSystem), m_controlledGameObject(-1), m_movement(0, 0) {
 	m_gameObjects = l_gameObjects;
 }
 

@@ -16,5 +16,7 @@
 
 // Network
 #define NETWORK_TIMESTEP 2
+#define SERVERIP "127.0.0.1"
+#define SERVERPORT 5555
 
 using KeyCode = sf::Keyboard::Key;

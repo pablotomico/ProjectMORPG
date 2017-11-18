@@ -37,10 +37,15 @@ void Game::Init() {
 
 void Game::Update() {
 	float deltaTime = m_elapsed.asSeconds() * 1000;
+
+	m_networkSystem.ReadNetwork();
+
 	m_window.Update(deltaTime);
 	m_messageSystem.DispatchMessages();
 	m_controlSystem.Update(deltaTime);
 	m_networkSystem.Update();
+
+	m_networkSystem.WriteNetwork();
 
 	m_renderSystem.Update(deltaTime);
 
