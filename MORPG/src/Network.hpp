@@ -5,6 +5,8 @@
 #include <WinSock2.h>
 #include "Observer.hpp"
 
+#include "NetFramework\include\NetFramework.hpp"
+
 #pragma comment(lib, "ws2_32.lib")
 
 struct NetMessage {
@@ -30,6 +32,9 @@ private:
 	
 private:
 	int m_client;
+
+	net::UDPSocket m_udpSocket;
+	net::Address m_serverAddress;
 
 	fd_set m_socketSetRead;
 	fd_set m_socketSetWrite;

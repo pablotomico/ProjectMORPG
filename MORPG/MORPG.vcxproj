@@ -171,6 +171,9 @@
     <ClCompile Include="src\Message.cpp" />
     <ClCompile Include="src\MessageSystem.cpp" />
     <ClCompile Include="src\MORPG.cpp" />
+    <ClCompile Include="src\NetFramework\src\Address.cpp" />
+    <ClCompile Include="src\NetFramework\src\TCPSocket.cpp" />
+    <ClCompile Include="src\NetFramework\src\UDPSocket.cpp" />
     <ClCompile Include="src\Network.cpp" />
     <ClCompile Include="src\Observer.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
@@ -186,6 +189,12 @@
     <ClInclude Include="src\Input.hpp" />
     <ClInclude Include="src\Message.hpp" />
     <ClInclude Include="src\MessageSystem.hpp" />
+    <ClInclude Include="src\NetFramework\include\Common.hpp" />
+    <ClInclude Include="src\NetFramework\include\Address.hpp" />
+    <ClInclude Include="src\NetFramework\include\NetFramework.hpp" />
+    <ClInclude Include="src\NetFramework\include\Socket.hpp" />
+    <ClInclude Include="src\NetFramework\include\TCPSocket.hpp" />
+    <ClInclude Include="src\NetFramework\include\UDPSocket.hpp" />
     <ClInclude Include="src\Network.hpp" />
     <ClInclude Include="src\Observer.hpp" />
     <ClInclude Include="src\Renderer.hpp" />

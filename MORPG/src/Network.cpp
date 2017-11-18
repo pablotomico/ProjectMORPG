@@ -28,6 +28,7 @@ Network::Network(MessageSystem * l_messageSystem) : Observer(System::S_Network, 
 	// ASK SERVER FOR CLIENT ID
 	m_client = 1;
 
+
 	std::cout << "Network system initialized!" << std::endl;
 }
 
@@ -41,7 +42,7 @@ void Network::ReadNetwork() {
 	// Select socket for reading
 	int count = select(0, &m_socketSetRead, NULL, NULL, &m_timeout);
 	if (count == SOCKET_ERROR) {
-		//std::cerr << "select failed";
+		std::cerr << "select failed";
 	}
 	if (FD_ISSET(m_socket, &m_socketSetRead)) {
 		NetMessage message;
@@ -64,7 +65,7 @@ void Network::WriteNetwork() {
 	// Select socket for writing
 	int count = select(0, NULL, &m_socketSetWrite, NULL, &m_timeout);
 	if (count == SOCKET_ERROR) {
-		//std::cerr << "select failed";
+		std::cerr << "select failed";
 	}
 	if (FD_ISSET(m_socket, &m_socketSetWrite)) {
 		NetMessage message;
