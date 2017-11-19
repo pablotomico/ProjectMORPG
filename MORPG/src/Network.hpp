@@ -33,7 +33,7 @@ private:
 private:
 	int m_client;
 
-	net::UDPSocket m_udpSocket;
+	net::UDPSocket* m_udpSocket;
 	net::Address m_serverAddress;
 
 	fd_set m_socketSetRead;

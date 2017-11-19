@@ -5,13 +5,10 @@
 namespace net {
 	class UDPSocket : public Socket {
 	public:
-		UDPSocket(Socket::SocketMode l_mode = Socket::SocketMode::None);
+		UDPSocket();
 
-		char* Receive(int l_length);
-		Address GetLastAddress();
+		int Receive(void* l_data, std::size_t l_size, net::Address& l_address);
 
-		bool Send(net::Address l_address, const char * l_message, int l_length);
-	private:
-		Address m_lastAddress;
+		int Send(const void* l_data, std::size_t l_size, const net::Address& l_address);
 	};
 }
