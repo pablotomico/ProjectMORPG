@@ -7,7 +7,6 @@ namespace net {
 	public:
 		TCPSocket();
 
-		bool Bind(Address l_address);
 		bool Listen();
 		bool Connect(Address l_address);
 		SOCKET Accept(Address& l_clientAddress, int* l_size);

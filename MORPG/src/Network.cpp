@@ -4,12 +4,17 @@
 Network::Network(MessageSystem * l_messageSystem) : Observer(System::S_Network, l_messageSystem), m_serverAddress(SERVERIP, SERVERPORT), m_client(-1) {
 	StartWinSock();
 
-	m_udpSocket = new net::UDPSocket();
 	m_tcpSocket = new net::TCPSocket();
+	m_udpSocket = new net::UDPSocket();
 
-	m_udpSocket->SetBlocking(false);
+	m_tcpSocket->Bind();
+	net::Address addr;
+	m_tcpSocket->GetBindedAddress(addr);
+	m_udpSocket->Bind(addr);
+
 	m_tcpSocket->SetBlocking(false);
-	
+	m_udpSocket->SetBlocking(false);
+
 	m_tcpSocket->Connect(m_serverAddress);
 
 	std::cout << "Network system initialized!" << std::endl;
@@ -37,11 +42,24 @@ void Network::ReadNetwork() {
 	} while (aux > 0);
 
 	do {
-		aux = m_udpSocket->Receive(&msg, sizeof NetMessage, m_serverAddress);
-		//printf("\t\t\tSERVER: [%d] -> (%f, %f)\n", msg.m_client, msg.m_x, msg.m_y);
+		net::Address addr;
+		int i = sizeof addr.m_address;
+		aux = m_udpSocket->Receive(&msg, sizeof NetMessage, addr, &i);
+		if (aux == SOCKET_ERROR) {
+			if (WSAGetLastError() == WSAEWOULDBLOCK) {
+				break;
+			}
+			std::cerr << "Error receiving!\n";
+		} 
+		printf("\nReceived UDP Message - Type %d - %d bytes ", (int) msg.m_type, aux);
+		printf("from: %s:%d\n", inet_ntoa(addr.m_address.sin_addr), ntohs(addr.m_address.sin_port));
+
+		if (msg.m_type == NetMessage::Type::DATA) {
+			printf("\t\tSERVER: [%d] -> (%f, %f)\n", msg.m_data.m_clientID, msg.m_data.x, msg.m_data.y);
+		}
 	} while (aux > 0);
 
-	
+
 }
 
 void Network::WriteNetwork() {
@@ -55,7 +73,7 @@ void Network::WriteNetwork() {
 	message.m_data.y = 0;
 
 
-	printf("ME: [%d] -> (%f, %f)\n", message.m_data.m_clientID, message.m_data.x, message.m_data.y);
+	//printf("ME: [%d] -> (%f, %f)\n", message.m_data.m_clientID, message.m_data.x, message.m_data.y);
 
 	m_udpSocket->Send(&message, sizeof NetMessage, m_serverAddress);
 	m_tcpSocket->Send(&message, sizeof NetMessage);

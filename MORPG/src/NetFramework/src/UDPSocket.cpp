@@ -8,9 +8,8 @@ net::UDPSocket::UDPSocket() {
 }
 
 
-int net::UDPSocket::Receive(void * l_data, std::size_t l_size, net::Address & l_address) {
-	int size = sizeof l_address.m_address;
-	return recvfrom(m_socket, (char *) l_data, l_size, 0, (sockaddr *) &l_address.m_address, &size);
+int net::UDPSocket::Receive(void * l_data, std::size_t l_size, net::Address & l_address, int* size) {
+	return recvfrom(m_socket, (char *) l_data, l_size, 0, (sockaddr *) &l_address.m_address, size);
 }
 
 

@@ -7,15 +7,6 @@ net::TCPSocket::TCPSocket() {
 	}
 }
 
-bool net::TCPSocket::Bind(Address l_address) {
-
-	if (bind(m_socket, (const sockaddr *) &l_address.m_address, sizeof l_address.m_address) != 0) {
-		std::cerr << "bind failed\n";
-		return false;
-	}
-	return true;
-}
-
 bool net::TCPSocket::Listen() {
 	if (listen(m_socket, 1) != 0) {
 		std::cerr << "listen failed\n";
