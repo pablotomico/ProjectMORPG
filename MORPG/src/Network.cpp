@@ -5,29 +5,12 @@ Network::Network(MessageSystem * l_messageSystem) : Observer(System::S_Network, 
 	StartWinSock();
 
 	m_udpSocket = new net::UDPSocket();
+	m_tcpSocket = new net::TCPSocket();
 
 	m_udpSocket->SetBlocking(false);
-
-	// creating UDP socket
-	m_socket = socket(AF_INET, SOCK_DGRAM, 0);
-	if (m_socket == INVALID_SOCKET) {
-		std::cerr << "Error creating socket";
-	}
-
-	// Fill the server address
-	m_serverAddr.sin_family = AF_INET;
-	m_serverAddr.sin_port = htons(SERVERPORT);
-	m_serverAddr.sin_addr.s_addr = inet_addr(SERVERIP);
-
-	// Set socket in the socketset
-	FD_ZERO(&m_socketSetWrite);
-	FD_ZERO(&m_socketSetRead);
+	m_tcpSocket->SetBlocking(false);
 	
-
-	// Define the timeout (0 = non-blocking)
-	m_timeout.tv_sec = 0;
-	m_timeout.tv_usec = 1;
-
+	m_tcpSocket->Connect(m_serverAddress);
 
 	// ASK SERVER FOR CLIENT ID
 	m_client = 1;
@@ -38,6 +21,7 @@ Network::Network(MessageSystem * l_messageSystem) : Observer(System::S_Network, 
 
 Network::~Network() {
 	delete m_udpSocket;
+	delete m_tcpSocket;
 }
 
 void Network::Update() {}
@@ -48,35 +32,22 @@ void Network::ReadNetwork() {
 	NetMessage msg;
 	do {
 		aux = m_udpSocket->Receive(&msg, sizeof NetMessage, m_serverAddress);
-		printf("\t\t\tSERVER: [%d] -> (%f, %f)\n", msg.m_client, msg.m_x, msg.m_y);
+		//printf("\t\t\tSERVER: [%d] -> (%f, %f)\n", msg.m_client, msg.m_x, msg.m_y);
+	} while (aux > 0);
+
+	do {
+		aux = m_tcpSocket->Receive(&msg, sizeof NetMessage);
+		if (msg.m_type == NetMessage::Type::SET_CLIENT_ID) {
+			printf("SERVER: Set ClientID to %d\n", msg.m_clientID);
+		}
+
+		//printf("\t\t\tSERVER: [%d] -> (%f, %f)\n", msg.m_client, msg.m_x, msg.m_y);
 	} while (aux > 0);
 	
-	return;
-	
-	
-	FD_ZERO(&m_socketSetRead);
-	FD_SET(m_socket, &m_socketSetRead);
-	// Select socket for reading
-	int count = select(0, &m_socketSetRead, NULL, NULL, &m_timeout);
-	if (count == SOCKET_ERROR) {
-		std::cerr << "select failed";
-	}
-	if (FD_ISSET(m_socket, &m_socketSetRead)) {
-		NetMessage message;
-		sockaddr_in fromAddr;
-		int fromAddrSize = sizeof(fromAddr);
-		int count = recvfrom(m_socket, (char *) &message, sizeof NetMessage, 0, (sockaddr *) &fromAddr, &fromAddrSize);
-		if (count < 0) {
-			std::cerr << "recvfrom failed";
-		}
-		if (count != sizeof Message) {
-			std::cerr << "received odd-sized message";
-		}
-		printf("\t\t\tSERVER: [%d] -> (%f, %f)\n", message.m_client, message.m_x, message.m_y);
-	}
 }
 
 void Network::WriteNetwork() {
+	/*
 	NetMessage message;
 	message.m_client = m_client;
 	message.m_x = 0;
@@ -85,30 +56,7 @@ void Network::WriteNetwork() {
 	printf("ME: [%d] -> (%f, %f)\n", message.m_client, message.m_x, message.m_y);
 
 	m_udpSocket->Send(&message, sizeof NetMessage, m_serverAddress);
-
-	return;
-
-
-	FD_ZERO(&m_socketSetWrite);
-	FD_SET(m_socket, &m_socketSetWrite);
-	// Select socket for writing
-	int count = select(0, NULL, &m_socketSetWrite, NULL, &m_timeout);
-	if (count == SOCKET_ERROR) {
-		std::cerr << "select failed";
-	}
-	if (FD_ISSET(m_socket, &m_socketSetWrite)) {
-		NetMessage message;
-		message.m_client = m_client;
-		message.m_x = 0;
-		message.m_y = 0;
-
-		printf("ME: [%d] -> (%f, %f)\n", message.m_client, message.m_x, message.m_y);
-
-		// Send the message to the server.
-		if (sendto(m_socket, (const char *) &message, sizeof NetMessage, 0, (const sockaddr *) &m_serverAddr, sizeof(m_serverAddr)) != sizeof NetMessage) {
-			std::cerr << "sendto failed";
-		}
-	}
+	*/
 }
 
 void Network::Notify(Message l_message) {

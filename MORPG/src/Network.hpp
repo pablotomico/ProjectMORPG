@@ -10,10 +10,26 @@
 #pragma comment(lib, "ws2_32.lib")
 
 struct NetMessage {
-	int m_client;
-	float m_x;
-	float m_y;
+public:
+	enum Type {
+		SET_CLIENT_ID,
+		DATA
+	};
+
+	struct Data {
+		int m_clientID;
+		float x;
+		float y;
+	};
+
+public:
+	Type m_type;
+	union {
+		int m_clientID;
+		Data m_data;
+	};
 };
+
 
 class Network : public Observer {
 public:
@@ -34,11 +50,6 @@ private:
 	int m_client;
 
 	net::UDPSocket* m_udpSocket;
+	net::TCPSocket* m_tcpSocket;
 	net::Address m_serverAddress;
-
-	fd_set m_socketSetRead;
-	fd_set m_socketSetWrite;
-	SOCKET m_socket;
-	sockaddr_in m_serverAddr;
-	timeval m_timeout;
 };
