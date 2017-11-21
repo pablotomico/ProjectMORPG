@@ -8,7 +8,7 @@ Client::Client(ClientID l_id) : m_id(l_id) {
 	}
 }
 
-Client::Client(ClientID l_id, SOCKET l_socket) : m_id(l_id) {
+Client::Client(ClientID l_id, SOCKET l_socket, sockaddr_in l_address) : m_id(l_id), m_address(l_address) {
 	m_tcpSocket = l_socket;
 }
 

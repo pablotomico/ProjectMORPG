@@ -6,6 +6,7 @@
 #include <WS2tcpip.h>
 #include <list>
 #include <unordered_map>
+#include <queue>
 
 #include "Client.hpp"
 
@@ -41,18 +42,20 @@ public:
 	Network(HWND l_window);
 	~Network();
 
-	Client* RegisterClient(SOCKET l_clientSocket);
+	Client* RegisterClient(SOCKET l_clientSocket, sockaddr_in l_address);
 	void RemoveClient(ClientID l_clientID, SOCKET l_clientSocket);
 
 	ClientID GetClientID(SOCKET l_clientSocket);
 	Client* GetClient(ClientID l_clientID);
 
 	bool ReadUDP();
+	bool WriteUDP();
 
 public:
 	SOCKET m_serverTCPSocket;
 	SOCKET m_serverUDPSocket;
-
+	bool m_TCPWriteReady;
+	bool m_UDPWriteReady;
 
 private:
 	void StartWinSock();
@@ -60,10 +63,12 @@ private:
 	void ProcessMessage(const NetMessage* l_message);
 private:
 	HWND m_window;
+	int m_clientCount;
 	std::unordered_map<SOCKET, ClientID> m_clientSocket;
 	std::unordered_map<ClientID, Client*> m_clients;
 	ClientID m_availableID;
 	char m_udpReadBuffer[sizeof NetMessage];
+	std::queue<NetMessage> m_udpMsgQueue;
 	int m_udpReadCount;
 	// TODO: Maybe a queue with available ids
 };

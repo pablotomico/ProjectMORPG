@@ -1,7 +1,7 @@
 #include "Network.hpp"
 #include <iostream>
 
-Network::Network(HWND l_window) : m_availableID(0), m_window(l_window) {
+Network::Network(HWND l_window) : m_availableID(0), m_window(l_window), m_clientCount(0), m_TCPWriteReady(false), m_UDPWriteReady(false) {
 	StartWinSock();
 	m_serverTCPSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (m_serverTCPSocket == INVALID_SOCKET) {
@@ -50,8 +50,8 @@ Network::~Network() {
 	WSACleanup();
 }
 
-Client* Network::RegisterClient(SOCKET l_clientSocket) {
-	Client* client = new Client(m_availableID++, l_clientSocket);
+Client* Network::RegisterClient(SOCKET l_clientSocket, sockaddr_in l_address) {
+	Client* client = new Client(m_availableID++, l_clientSocket, l_address);
 	if (WSAAsyncSelect(client->m_tcpSocket, m_window, WM_SOCKET, FD_CLOSE | FD_READ | FD_WRITE) == SOCKET_ERROR) {
 		printf("TCP Client WSAAsyncSelect failed\n");
 		return nullptr;
@@ -59,6 +59,7 @@ Client* Network::RegisterClient(SOCKET l_clientSocket) {
 		printf("Registered new Client (id %d, SOCKET %d)\n", client->m_id, client->m_tcpSocket);
 		m_clients[client->m_id] = client;
 		m_clientSocket[client->m_tcpSocket] = client->m_id;
+		++m_clientCount;
 		return client;
 	}
 }
@@ -68,6 +69,7 @@ void Network::RemoveClient(ClientID l_clientID, SOCKET l_clientSocket) {
 	m_clientSocket.erase(client->m_tcpSocket);
 	delete client;
 	m_clients.erase(l_clientID);
+	--m_clientCount;
 }
 
 ClientID Network::GetClientID(SOCKET l_clientSocket) {
@@ -87,36 +89,49 @@ Client * Network::GetClient(ClientID l_clientID) {
 bool Network::ReadUDP() {
 	// Receive as much data from the client as will fit in the buffer.
 	int spaceLeft = (sizeof m_udpReadBuffer) - m_udpReadCount;
-	bool done = false;
 	for (;;) {
-		int count = recv(m_serverUDPSocket, m_udpReadBuffer + m_udpReadCount, spaceLeft, 0);
+		sockaddr_in addr;
+		int addrSize = sizeof(addr);
+		int count = recvfrom(m_serverUDPSocket, m_udpReadBuffer + m_udpReadCount, spaceLeft, 0, (sockaddr *) &addr, &addrSize);
 		if (count == SOCKET_ERROR) {
 			if (WSAGetLastError() == WSAEWOULDBLOCK) {
-				// That's as much data as we're going to get this time!
-				// We need to wait for another FD_READ message.
+				m_UDPWriteReady = false;
 				break;
 			} else {
 				return true;
 			}
 		}
-		// We've successfully read some more data into the buffer.
 		m_udpReadCount += count;
 	}
 
 	if (m_udpReadCount < sizeof NetMessage) {
-		// ... but we've not received a complete message yet.
-		// So we can't do anything until we receive some more.
 		return false;
 	}
-
-	// We've got a complete message.
 	ProcessMessage((const NetMessage *) m_udpReadBuffer);
-
-	// Clear the buffer, ready for the next message.
 	m_udpReadCount = 0;
 
 	return false;
+}
 
+bool Network::WriteUDP() {
+
+	while (!m_udpMsgQueue.empty()) {
+		NetMessage message = m_udpMsgQueue.front();
+		m_udpMsgQueue.pop();
+
+		for (auto& itr = m_clients.begin(); itr != m_clients.end(); ++itr) {
+			printf("TO->[%d]\tINFO:[%d] -> (%f, %f) Type %d\n", itr->first, message.m_data.m_clientID, message.m_data.x, message.m_data.y, (int) message.m_type);
+			int count = sendto(m_serverUDPSocket, (const char*) &message, sizeof NetMessage, 0, (const sockaddr *) &(itr->second->m_address), sizeof(itr->second->m_address));
+			if (count == SOCKET_ERROR) {
+				if (WSAGetLastError() == WSAEWOULDBLOCK) {
+					break;
+				}
+				printf("[!!!]Error sending updated to client!\n");
+			}
+		}
+
+	}
+	return false;
 }
 
 
@@ -134,6 +149,12 @@ void Network::StartWinSock() {
 void Network::ProcessMessage(const NetMessage* l_message) {
 	if (l_message->m_type == NetMessage::Type::DATA) {
 		printf("[%d] -> (%f, %f)\n", l_message->m_data.m_clientID, l_message->m_data.x, l_message->m_data.y);
-	}
 
+		NetMessage message;
+		message.m_type = l_message->m_type;
+		message.m_data = l_message->m_data;
+		m_udpMsgQueue.push(message);
+	}
 }
+
+

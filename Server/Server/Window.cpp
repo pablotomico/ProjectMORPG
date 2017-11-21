@@ -126,7 +126,7 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 			if (WSAAsyncSelect(m_network->m_serverTCPSocket, m_window, WM_SOCKET, FD_CLOSE | FD_CONNECT | FD_READ | FD_ACCEPT) == SOCKET_ERROR) {
 				std::cerr << "WSAAsyncSelect failed\n";
 			}
-			Client* client = m_network->RegisterClient(clientSocket);
+			Client* client = m_network->RegisterClient(clientSocket, clientAddr);
 
 
 			NetMessage message;
@@ -151,11 +151,21 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 		{
 			printf("FD_READ on SOCKET %d\n", (SOCKET) wParam);
 			if (m_network->m_serverUDPSocket == (SOCKET) wParam) {
-				// printf("New UDP message\n");
+				printf("New UDP message\n");
 				m_network->ReadUDP();
-
+				m_network->WriteUDP();
 			} else if (m_network->m_serverTCPSocket == (SOCKET) wParam) {
 				printf("New TCP message\n");
+			}
+		}
+		break;
+	case FD_WRITE:
+		{
+			printf("FD_WRITE on SOCKET %d\n", (SOCKET) wParam);
+			if (m_network->m_serverUDPSocket == (SOCKET) wParam) {
+				// printf("New UDP message\n");
+				m_network->WriteUDP();
+
 			}
 		}
 		break;
