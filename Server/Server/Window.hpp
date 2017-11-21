@@ -13,4 +13,4 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 void DrawWindow(HWND window);
 void CloseWindow();
 
-void HandleSocketEvent(LPARAM);
+void HandleSocketEvent(LPARAM, WPARAM wParam);

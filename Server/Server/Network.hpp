@@ -42,6 +42,10 @@ public:
 	~Network();
 
 	Client* RegisterClient(SOCKET l_clientSocket);
+	void RemoveClient(ClientID l_clientID, SOCKET l_clientSocket);
+
+	ClientID GetClientID(SOCKET l_clientSocket);
+	Client* GetClient(ClientID l_clientID);
 
 public:
 	SOCKET m_serverTCPSocket;

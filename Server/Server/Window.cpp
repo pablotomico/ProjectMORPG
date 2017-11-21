@@ -34,14 +34,14 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 	hInst = hInstance; // Store instance handle in our global variable
 
 	m_window = CreateWindow(L"WindowClass",
-							 L"Server",
-							 WS_OVERLAPPEDWINDOW,
-							 600, 600,
-							 400, 200,
-							 nullptr,
-							 nullptr,
-							 hInstance,
-							 nullptr);
+							L"Server",
+							WS_OVERLAPPEDWINDOW,
+							600, 600,
+							400, 200,
+							nullptr,
+							nullptr,
+							hInstance,
+							nullptr);
 	m_network = new Network(m_window);
 	if (!m_window) {
 		return FALSE;
@@ -83,7 +83,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		break;
 
 	case WM_SOCKET:
-		HandleSocketEvent(lParam);
+		HandleSocketEvent(lParam, wParam);
 		break;
 
 
@@ -111,28 +111,38 @@ void CloseWindow() {
 }
 
 
-void HandleSocketEvent(LPARAM lParam) {
+void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 	switch (WSAGETSELECTEVENT(lParam)) {
 	case FD_ACCEPT:
-		printf("  FD_ACCEPT\n");
-		sockaddr_in clientAddr;
-		int addrSize = sizeof(clientAddr);
-		SOCKET clientSocket = accept(m_network->m_serverTCPSocket, (sockaddr *) &clientAddr, &addrSize);
-		if (clientSocket == INVALID_SOCKET) {
-			printf("accept failed\n");
-			break;
+		{
+			printf("  FD_ACCEPT\n");
+			sockaddr_in clientAddr;
+			int addrSize = sizeof(clientAddr);
+			SOCKET clientSocket = accept(m_network->m_serverTCPSocket, (sockaddr *) &clientAddr, &addrSize);
+			if (clientSocket == INVALID_SOCKET) {
+				printf("accept failed\n");
+				break;
+			}
+
+			Client* client = m_network->RegisterClient(clientSocket);
+
+
+			NetMessage message;
+			message.m_type = NetMessage::Type::SET_CLIENT_ID;
+			message.m_clientID = client->m_id;
+
+			send(clientSocket, (char *) &message, sizeof NetMessage, 0);
 		}
-
-		Client* client = m_network->RegisterClient(clientSocket);
-		
-
-		NetMessage message;
-		message.m_type = NetMessage::Type::SET_CLIENT_ID;
-		message.m_clientID = client->m_id;
-
-		send(clientSocket, (char *) &message, sizeof NetMessage, 0);
-
 		break;
 
+	case FD_CLOSE:
+		{
+			ClientID clientID = m_network->GetClientID((SOCKET) wParam);
+			if (clientID != -1) {
+				printf("Client [%d] disconected (SOCKET %d)\n", clientID, (SOCKET) wParam);
+				m_network->RemoveClient(clientID, wParam);
+			}
+		}
+		break;
 	}
 }

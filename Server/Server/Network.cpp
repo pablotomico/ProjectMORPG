@@ -46,14 +46,37 @@ Network::~Network() {
 }
 
 Client* Network::RegisterClient(SOCKET l_clientSocket) {
-	Client* client = new Client(m_availableID++);
+	Client* client = new Client(m_availableID++, l_clientSocket);
 	if (WSAAsyncSelect(client->m_tcpSocket, m_window, WM_SOCKET, FD_CLOSE | FD_READ | FD_WRITE) == SOCKET_ERROR) {
 		printf("TCP Client WSAAsyncSelect failed\n");
+		return nullptr;
 	} else {
-		printf("Registered new Client, asigned id=%d\n", client->m_id);
+		printf("Registered new Client (id %d, SOCKET %d)\n", client->m_id, client->m_tcpSocket);
+		m_clients[client->m_id] = client;
+		m_clientSocket[client->m_tcpSocket] = client->m_id;
+		return client;
 	}
+}
 
-	return client;
+void Network::RemoveClient(ClientID l_clientID, SOCKET l_clientSocket) {
+	Client* client = m_clients[l_clientID];
+	m_clientSocket.erase(client->m_tcpSocket);
+	delete client;
+	m_clients.erase(l_clientID);
+}
+
+ClientID Network::GetClientID(SOCKET l_clientSocket) {
+	if (m_clientSocket.find(l_clientSocket) == m_clientSocket.end()) {
+		return -1;
+	}
+	return m_clientSocket[l_clientSocket];
+}
+
+Client * Network::GetClient(ClientID l_clientID) {
+	if (m_clients.find(l_clientID) == m_clients.end()) {
+		return nullptr;
+	}
+	return m_clients[l_clientID];
 }
 
 
