@@ -1,0 +1,138 @@
+#include "Window.hpp"
+
+#include "Network.hpp"
+
+Network* m_network;
+HWND m_window;
+
+HINSTANCE hInst;                                // current instance
+WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
+WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+
+ATOM MyRegisterClass(HINSTANCE hInstance) {
+	WNDCLASSEX wcex;
+
+	wcex.cbSize = sizeof(wcex);
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	// Use our window procedure to handle messages for this kind of window.
+	wcex.lpfnWndProc = WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInstance;
+	wcex.hIcon = 0;
+	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+
+	wcex.hbrBackground = (HBRUSH) (COLOR_WINDOW + 1);
+	wcex.lpszMenuName = nullptr;
+	wcex.lpszClassName = L"WindowClass";
+	wcex.hIconSm = 0;
+
+	return RegisterClassExW(&wcex);
+}
+
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
+	hInst = hInstance; // Store instance handle in our global variable
+
+	m_window = CreateWindow(L"WindowClass",
+							 L"Server",
+							 WS_OVERLAPPEDWINDOW,
+							 600, 600,
+							 400, 200,
+							 nullptr,
+							 nullptr,
+							 hInstance,
+							 nullptr);
+	m_network = new Network(m_window);
+	if (!m_window) {
+		return FALSE;
+	}
+
+	ShowWindow(m_window, nCmdShow);
+	UpdateWindow(m_window);
+
+	return TRUE;
+}
+
+
+//
+//  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
+//
+//  PURPOSE:  Processes messages for the main window.
+//
+//  WM_COMMAND  - process the application menu
+//  WM_PAINT    - Paint the main window
+//  WM_DESTROY  - post a quit message and return
+//
+//
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+	switch (message) {
+	case WM_DESTROY:
+		CloseWindow();
+		break;
+	case WM_KEYDOWN:
+		switch (wParam) {
+		case VK_ESCAPE:
+			CloseWindow();
+			break;
+		}
+		break;
+	case WM_PAINT:
+		{
+			DrawWindow(hWnd);
+		}
+		break;
+
+	case WM_SOCKET:
+		HandleSocketEvent(lParam);
+		break;
+
+
+	default:
+		return DefWindowProc(hWnd, message, wParam, lParam);
+	}
+	return 0;
+}
+
+
+void DrawWindow(HWND window) {
+	std::wstring message = L"Press Esc to exit\n";
+
+	PAINTSTRUCT ps;
+	HDC hdc = BeginPaint(window, &ps);
+	RECT rt;
+	GetClientRect(window, &rt);
+	DrawText(hdc, message.c_str(), message.size(), &rt, DT_LEFT);
+	EndPaint(window, &ps);
+}
+
+void CloseWindow() {
+	delete m_network;
+	PostQuitMessage(0);
+}
+
+
+void HandleSocketEvent(LPARAM lParam) {
+	switch (WSAGETSELECTEVENT(lParam)) {
+	case FD_ACCEPT:
+		printf("  FD_ACCEPT\n");
+		sockaddr_in clientAddr;
+		int addrSize = sizeof(clientAddr);
+		SOCKET clientSocket = accept(m_network->m_serverTCPSocket, (sockaddr *) &clientAddr, &addrSize);
+		if (clientSocket == INVALID_SOCKET) {
+			printf("accept failed\n");
+			break;
+		}
+
+		Client* client = m_network->RegisterClient(clientSocket);
+		
+
+		NetMessage message;
+		message.m_type = NetMessage::Type::SET_CLIENT_ID;
+		message.m_clientID = client->m_id;
+
+		send(clientSocket, (char *) &message, sizeof NetMessage, 0);
+
+		break;
+
+	}
+}
