@@ -115,7 +115,7 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 	switch (WSAGETSELECTEVENT(lParam)) {
 	case FD_ACCEPT:
 		{
-			printf("  FD_ACCEPT\n");
+			printf("FD_ACCEPT");
 			sockaddr_in clientAddr;
 			int addrSize = sizeof(clientAddr);
 			SOCKET clientSocket = accept(m_network->m_serverTCPSocket, (sockaddr *) &clientAddr, &addrSize);
@@ -123,7 +123,9 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 				printf("accept failed\n");
 				break;
 			}
-
+			if (WSAAsyncSelect(m_network->m_serverTCPSocket, m_window, WM_SOCKET, FD_CLOSE | FD_CONNECT | FD_READ | FD_ACCEPT) == SOCKET_ERROR) {
+				std::cerr << "WSAAsyncSelect failed\n";
+			}
 			Client* client = m_network->RegisterClient(clientSocket);
 
 
@@ -140,7 +142,20 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 			ClientID clientID = m_network->GetClientID((SOCKET) wParam);
 			if (clientID != -1) {
 				printf("Client [%d] disconected (SOCKET %d)\n", clientID, (SOCKET) wParam);
-				m_network->RemoveClient(clientID, wParam);
+				m_network->RemoveClient(clientID, (SOCKET) wParam);
+			}
+		}
+		break;
+
+	case FD_READ:
+		{
+			printf("FD_READ on SOCKET %d\n", (SOCKET) wParam);
+			if (m_network->m_serverUDPSocket == (SOCKET) wParam) {
+				// printf("New UDP message\n");
+				m_network->ReadUDP();
+
+			} else if (m_network->m_serverTCPSocket == (SOCKET) wParam) {
+				printf("New TCP message\n");
 			}
 		}
 		break;

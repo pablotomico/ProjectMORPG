@@ -27,7 +27,9 @@ Network::Network(HWND l_window) : m_availableID(0), m_window(l_window) {
 		std::cerr << "listen failed\n";
 	}
 
-	printf("Server socket listening\n");
+	if (bind(m_serverUDPSocket, ai->ai_addr, ai->ai_addrlen) != 0) {
+		std::cerr << "bind failed\n";
+	}
 
 	if (WSAAsyncSelect(m_serverTCPSocket, m_window, WM_SOCKET, FD_CLOSE | FD_CONNECT | FD_READ | FD_ACCEPT) == SOCKET_ERROR) {
 		std::cerr << "WSAAsyncSelect failed\n";
@@ -35,6 +37,9 @@ Network::Network(HWND l_window) : m_availableID(0), m_window(l_window) {
 	if (WSAAsyncSelect(m_serverUDPSocket, m_window, WM_SOCKET, FD_READ | FD_WRITE) == SOCKET_ERROR) {
 		std::cerr << "WSAAsyncSelect failed\n";
 	}
+
+
+	printf("Server ready!\n TCPSocket %d, UDPSocket %d\n", m_serverTCPSocket, m_serverUDPSocket);
 }
 
 Network::~Network() {
@@ -79,6 +84,41 @@ Client * Network::GetClient(ClientID l_clientID) {
 	return m_clients[l_clientID];
 }
 
+bool Network::ReadUDP() {
+	// Receive as much data from the client as will fit in the buffer.
+	int spaceLeft = (sizeof m_udpReadBuffer) - m_udpReadCount;
+	bool done = false;
+	for (;;) {
+		int count = recv(m_serverUDPSocket, m_udpReadBuffer + m_udpReadCount, spaceLeft, 0);
+		if (count == SOCKET_ERROR) {
+			if (WSAGetLastError() == WSAEWOULDBLOCK) {
+				// That's as much data as we're going to get this time!
+				// We need to wait for another FD_READ message.
+				break;
+			} else {
+				return true;
+			}
+		}
+		// We've successfully read some more data into the buffer.
+		m_udpReadCount += count;
+	}
+
+	if (m_udpReadCount < sizeof NetMessage) {
+		// ... but we've not received a complete message yet.
+		// So we can't do anything until we receive some more.
+		return false;
+	}
+
+	// We've got a complete message.
+	ProcessMessage((const NetMessage *) m_udpReadBuffer);
+
+	// Clear the buffer, ready for the next message.
+	m_udpReadCount = 0;
+
+	return false;
+
+}
+
 
 void Network::StartWinSock() {
 	WSADATA w;
@@ -89,4 +129,11 @@ void Network::StartWinSock() {
 	if (w.wVersion != 0x0202) {
 		std::cerr << "Wrong WinSock version\n";
 	}
+}
+
+void Network::ProcessMessage(const NetMessage* l_message) {
+	if (l_message->m_type == NetMessage::Type::DATA) {
+		printf("[%d] -> (%f, %f)\n", l_message->m_data.m_clientID, l_message->m_data.x, l_message->m_data.y);
+	}
+
 }

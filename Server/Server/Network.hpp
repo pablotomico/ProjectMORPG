@@ -47,6 +47,8 @@ public:
 	ClientID GetClientID(SOCKET l_clientSocket);
 	Client* GetClient(ClientID l_clientID);
 
+	bool ReadUDP();
+
 public:
 	SOCKET m_serverTCPSocket;
 	SOCKET m_serverUDPSocket;
@@ -54,10 +56,14 @@ public:
 
 private:
 	void StartWinSock();
+
+	void ProcessMessage(const NetMessage* l_message);
 private:
 	HWND m_window;
 	std::unordered_map<SOCKET, ClientID> m_clientSocket;
 	std::unordered_map<ClientID, Client*> m_clients;
 	ClientID m_availableID;
+	char m_udpReadBuffer[sizeof NetMessage];
+	int m_udpReadCount;
 	// TODO: Maybe a queue with available ids
 };
