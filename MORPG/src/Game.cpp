@@ -9,7 +9,8 @@ Game::Game()
 	, m_controlSystem(&m_messageSystem, m_gameObjects)
 	, m_window(&m_messageSystem, WINDOW_TITLE, sf::Vector2u(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), &m_inputSystem)
 	, m_renderSystem(&m_messageSystem, m_gameObjects, &m_window)
-	, m_networkSystem(&m_messageSystem) {}
+	, m_networkSystem(&m_messageSystem)
+	, m_networkControlSystem(&m_messageSystem) {}
 
 Game::~Game() {}
 
@@ -30,7 +31,11 @@ sf::Time Game::GetElapsedTime() {
 
 void Game::Init() {
 	// Init GameObjects
-	GameObjectID id = m_gameObjectManager.CreateGameObject(true, true, "intro.png");
+	GameObjectID id = m_gameObjectManager.CreateGameObject(true, true, "character_1.png");
+	GameObject* gameobject = m_gameObjectManager.GetGameObject(id);
+	gameobject->SetSpriteScale(0.25f, 0.25f);
+
+
 
 	m_controlSystem.SetControlledGameObject(id);
 }
@@ -38,7 +43,7 @@ void Game::Init() {
 void Game::Update() {
 	float deltaTime = m_elapsed.asSeconds() * 1000;
 
-	if (m_networkTime.asMilliseconds() >= NETWORK_TIMESTEP) {
+	if (m_networkTime.asMilliseconds() > NETWORK_TIMESTEP) {
 		m_networkSystem.ReadNetwork();
 	}
 
@@ -47,7 +52,7 @@ void Game::Update() {
 	m_controlSystem.Update(deltaTime);
 	m_networkSystem.Update();
 
-	if (m_networkTime.asMilliseconds() >= NETWORK_TIMESTEP) {
+	if (m_networkTime.asMilliseconds() > NETWORK_TIMESTEP) {
 		m_networkSystem.WriteNetwork();
 		m_networkTime -= sf::milliseconds(NETWORK_TIMESTEP);
 	}

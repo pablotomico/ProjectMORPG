@@ -14,7 +14,9 @@ enum  MessageType {
 	M_KeyPressed,
 	M_KeyHold,
 	M_KeyReleased,
-	M_GameObject
+	M_GameObject,
+	M_GameObjectCreated,
+	M_Player
 	// TODO: Come up with more types
 };
 
@@ -46,6 +48,7 @@ public:
 		std::string* m_string;
 		int m_integer;
 		KeyCode m_keyCode;
+		std::pair<int, GameObjectID> m_gameObjectIDs;
 		GameObjectMessage m_gameObject;
 	};
 };

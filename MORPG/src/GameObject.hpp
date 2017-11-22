@@ -23,6 +23,7 @@ public:
 
 	void SetPosition(const sf::Vector2f& l_position);
 	void SetSprite(const std::string& l_texture);
+	void SetSpriteScale(const float l_x, const float l_y);
 
 	bool IsDrawable();
 	bool IsControllable();

@@ -15,7 +15,7 @@
 #define MOVEMENT_SPEED 1
 
 // Network
-#define NETWORK_TIMESTEP 50
+#define NETWORK_TIMESTEP 1000
 #define SERVERIP "127.0.0.1"
 #define SERVERPORT 5555
 

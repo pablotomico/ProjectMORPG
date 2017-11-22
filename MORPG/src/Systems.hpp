@@ -6,5 +6,6 @@ enum System {
 	S_Control,
 	S_GameObjectManager,
 	S_Render,
-	S_Network
+	S_Network,
+	S_NetworkControl
 };

@@ -36,6 +36,10 @@ void GameObject::SetSprite(const std::string& l_texture) {
 	}
 }
 
+void GameObject::SetSpriteScale(const float l_x, const float l_y) {
+	m_sprite.setScale(l_x, l_y);
+}
+
 bool GameObject::IsDrawable() {
 	return m_isDrawable;
 }

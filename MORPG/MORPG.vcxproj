@@ -175,6 +175,7 @@
     <ClCompile Include="src\NetFramework\src\TCPSocket.cpp" />
     <ClCompile Include="src\NetFramework\src\UDPSocket.cpp" />
     <ClCompile Include="src\Network.cpp" />
+    <ClCompile Include="src\NetworkControl.cpp" />
     <ClCompile Include="src\Observer.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\TextureManager.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="src\NetFramework\include\TCPSocket.hpp" />
     <ClInclude Include="src\NetFramework\include\UDPSocket.hpp" />
     <ClInclude Include="src\Network.hpp" />
+    <ClInclude Include="src\NetworkControl.hpp" />
     <ClInclude Include="src\Observer.hpp" />
     <ClInclude Include="src\Renderer.hpp" />
     <ClInclude Include="src\Systems.hpp" />

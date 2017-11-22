@@ -10,9 +10,10 @@ public:
 	~GameObjectManager();
 
 	GameObjectContainer* GetGameObjectContainer();
+	GameObject* GetGameObject(GameObjectID l_id);
 
 	GameObjectID CreateGameObject(bool l_drawable = false, bool l_controllable = false, const std::string& l_texture = false);
-	void UpdateGameObject(GameObjectID l_id);
+	void UpdateGameObject(GameObjectID l_id, sf::Vector2f l_position);
 	void RemoveGameObject(GameObjectID l_id);
 
 protected:

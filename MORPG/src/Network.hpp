@@ -3,6 +3,7 @@
 #define _WINSOCK_DEPRECATED_NO_WARNINGS
 
 #include <WinSock2.h>
+#include <queue>
 #include "Observer.hpp"
 
 #include "NetFramework\include\NetFramework.hpp"
@@ -52,4 +53,5 @@ private:
 	net::UDPSocket* m_udpSocket;
 	net::TCPSocket* m_tcpSocket;
 	net::Address m_serverAddress;
+	std::queue<NetMessage> m_udpWriteQueue;
 };
