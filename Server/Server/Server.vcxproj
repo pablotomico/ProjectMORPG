@@ -151,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.hpp" />
+    <ClInclude Include="NetMessage.hpp" />
     <ClInclude Include="Network.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="utils.h" />

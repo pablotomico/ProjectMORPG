@@ -33,9 +33,24 @@ void Network::ReadNetwork() {
 	NetMessage msg;
 	do {
 		aux = m_tcpSocket->Receive(&msg, sizeof NetMessage);
+		if (aux == -1) {
+			break;
+		}
 		if (msg.m_type == NetMessage::Type::SET_CLIENT_ID) {
 			printf("SERVER: Set ClientID to %d\n", msg.m_clientID);
 			m_client = msg.m_clientID;
+
+			NetMessage msg;
+			msg.m_type = NetMessage::Type::INITIAL_DATA;
+			msg.m_initialData.m_clientID = m_client;
+			std::string username("XxmusikitoxX");
+			memcpy(msg.m_initialData.m_username, username.c_str(), username.length());
+			msg.m_initialData.m_username[username.length()] = '\0';
+
+			msg.m_initialData.x = 0;
+			msg.m_initialData.y = 0;
+
+			m_tcpWriteQueue.push(msg);
 		}
 
 		//printf("\t\t\tSERVER: [%d] -> (%f, %f)\n", msg.m_client, msg.m_x, msg.m_y);
@@ -55,7 +70,7 @@ void Network::ReadNetwork() {
 		printf("from: %s:%d\n", inet_ntoa(addr.m_address.sin_addr), ntohs(addr.m_address.sin_port));
 
 		if (msg.m_type == NetMessage::Type::DATA) {
-			//printf("\t\tSERVER: [%d] -> (%f, %f)\n", msg.m_data.m_clientID, msg.m_data.x, msg.m_data.y);
+			printf("\t\tSERVER: [%d] -> (%f, %f)\n", msg.m_data.m_clientID, msg.m_data.x, msg.m_data.y);
 			if (msg.m_data.m_clientID != m_client) {
 				Message msg(MessageType::M_Player, System::S_NetworkControl, msg.m_data.m_clientID, sf::Vector2f(msg.m_data.x, msg.m_data.y), sf::Time());
 				Send(msg);
@@ -75,7 +90,18 @@ void Network::WriteNetwork() {
 		NetMessage message = m_udpWriteQueue.front();
 		m_udpWriteQueue.pop();
 
+		// TODO: check return value
 		m_udpSocket->Send(&message, sizeof NetMessage, m_serverAddress);
+	}
+
+	while (!m_tcpWriteQueue.empty()) {
+		NetMessage message = m_tcpWriteQueue.front();
+		m_tcpWriteQueue.pop();
+
+		if (message.m_type == NetMessage::Type::INITIAL_DATA) {
+			printf("INITIALDATA\n");
+		}
+		// TODO: check return value
 		m_tcpSocket->Send(&message, sizeof NetMessage);
 	}
 

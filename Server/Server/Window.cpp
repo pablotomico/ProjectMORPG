@@ -126,6 +126,7 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 			if (WSAAsyncSelect(m_network->m_serverTCPSocket, m_window, WM_SOCKET, FD_CLOSE | FD_CONNECT | FD_READ | FD_ACCEPT) == SOCKET_ERROR) {
 				std::cerr << "WSAAsyncSelect failed\n";
 			}
+			
 			Client* client = m_network->RegisterClient(clientSocket, clientAddr);
 
 
@@ -133,7 +134,9 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 			message.m_type = NetMessage::Type::SET_CLIENT_ID;
 			message.m_clientID = client->m_id;
 
-			send(clientSocket, (char *) &message, sizeof NetMessage, 0);
+			//send(clientSocket, (char *) &message, sizeof NetMessage, 0);
+
+			m_network->QueueTCPMessage(message, client->m_id);
 		}
 		break;
 
@@ -156,6 +159,15 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 				m_network->WriteUDP();
 			} else if (m_network->m_serverTCPSocket == (SOCKET) wParam) {
 				printf("New TCP message\n");
+			} else {
+				std::unordered_map<SOCKET, ClientID>* clientSocket = m_network->GetClientSocket();
+				for (auto& itr = clientSocket->begin(); itr != clientSocket->end(); ++itr) {
+					if (itr->first == (SOCKET) wParam) {
+						if (m_network->ReadTCP((SOCKET) wParam)) {
+							break;
+						}
+					}
+				}
 			}
 		}
 		break;
@@ -163,9 +175,16 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 		{
 			printf("FD_WRITE on SOCKET %d\n", (SOCKET) wParam);
 			if (m_network->m_serverUDPSocket == (SOCKET) wParam) {
-				// printf("New UDP message\n");
 				m_network->WriteUDP();
-
+			} else {
+				std::unordered_map<SOCKET, ClientID>* clientSocket = m_network->GetClientSocket();
+				for (auto& itr = clientSocket->begin(); itr != clientSocket->end(); ++itr) {
+					if (itr->first == (SOCKET) wParam) {
+						if (m_network->WriteTCP(itr->second)) {
+							break;
+						}
+					}
+				}
 			}
 		}
 		break;

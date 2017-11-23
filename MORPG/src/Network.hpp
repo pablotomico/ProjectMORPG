@@ -14,7 +14,14 @@ struct NetMessage {
 public:
 	enum Type {
 		SET_CLIENT_ID,
+		INITIAL_DATA,
 		DATA
+	};
+	struct InitialData {
+		int m_clientID;
+		char m_username[16];
+		float x;
+		float y;
 	};
 
 	struct Data {
@@ -27,6 +34,7 @@ public:
 	Type m_type;
 	union {
 		int m_clientID;
+		InitialData m_initialData;
 		Data m_data;
 	};
 };
@@ -54,4 +62,5 @@ private:
 	net::TCPSocket* m_tcpSocket;
 	net::Address m_serverAddress;
 	std::queue<NetMessage> m_udpWriteQueue;
+	std::queue<NetMessage> m_tcpWriteQueue;
 };

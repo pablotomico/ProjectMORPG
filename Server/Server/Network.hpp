@@ -16,26 +16,7 @@
 #define SERVERIP "127.0.0.1"
 #define SERVERPORT "5555"
 
-struct NetMessage {
-public:
-	enum Type {
-		SET_CLIENT_ID,
-		DATA
-	};
 
-	struct Data {
-		int m_clientID;
-		float x;
-		float y;
-	};
-
-public:
-	Type m_type;
-	union {
-		int m_clientID;
-		Data m_data;
-	};
-};
 
 class Network {
 public:
@@ -48,8 +29,15 @@ public:
 	ClientID GetClientID(SOCKET l_clientSocket);
 	Client* GetClient(ClientID l_clientID);
 
+	std::unordered_map<SOCKET, ClientID>* GetClientSocket();
+
 	bool ReadUDP();
 	bool WriteUDP();
+
+	bool ReadTCP(SOCKET l_tcpSocket);
+	bool WriteTCP(ClientID l_client);
+
+	void QueueTCPMessage(NetMessage l_message, SOCKET l_socket);
 
 public:
 	SOCKET m_serverTCPSocket;
@@ -68,7 +56,13 @@ private:
 	std::unordered_map<ClientID, Client*> m_clients;
 	ClientID m_availableID;
 	char m_udpReadBuffer[sizeof NetMessage];
+	char m_tcpReadBuffer[sizeof NetMessage];
 	std::queue<NetMessage> m_udpMsgQueue;
+	
 	int m_udpReadCount;
+	int m_tcpReadCount;
+
+
+
 	// TODO: Maybe a queue with available ids
 };
