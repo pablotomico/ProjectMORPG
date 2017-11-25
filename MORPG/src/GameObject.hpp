@@ -19,11 +19,14 @@ public:
 	GameObjectID GetGameObjectID();
 
 	sf::Vector2f GetPosition();
+	std::pair<int, sf::Vector2f> GetNetPosition();
 	sf::Sprite& GetSprite();
 
-	void SetPosition(const sf::Vector2f& l_position);
+	void SetPosition(const sf::Vector2f& l_position, int l_tick);
 	void SetSprite(const std::string& l_texture);
 	void SetSpriteScale(const float l_x, const float l_y);
+
+	void PredictPosition(int l_tick, float l_deltaTime);
 
 	bool IsDrawable();
 	bool IsControllable();
@@ -36,14 +39,21 @@ public:
 
 	virtual void Move(sf::Vector2f l_move) {
 		Move(l_move.x, l_move.y);
-	}
+	}\
+
+public:
+	float m_timestep;
 
 private:
 	GameObjectID m_id;
 
 	sf::Vector2f m_position;
+	std::pair<int, sf::Vector2f> m_netPosition;
+	sf::Vector2f m_velocity;
 	sf::Sprite m_sprite;
 	std::string m_texture;
+
+	
 
 	TextureManager* m_textureManager;
 

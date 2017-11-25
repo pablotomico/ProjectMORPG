@@ -14,7 +14,10 @@ public:
 
 	GameObjectID CreateGameObject(bool l_drawable = false, bool l_controllable = false, const std::string& l_texture = false);
 	void UpdateGameObject(GameObjectID l_id, sf::Vector2f l_position);
+	void UpdateGameObject(GameObjectID l_id, sf::Vector2f l_position, int l_tick);
 	void RemoveGameObject(GameObjectID l_id);
+
+	void Update(int l_tick, float l_deltaTime);
 
 protected:
 	void Notify(Message l_message);

@@ -29,11 +29,16 @@ public:
 		float x;
 		float y;
 	};
+	struct ServerData {
+		int m_clientID;
+		float m_serverTimestep;
+	};
 
 public:
 	Type m_type;
+	int m_tick;
 	union {
-		int m_clientID;
+		ServerData m_serverData;
 		InitialData m_initialData;
 		Data m_data;
 	};
@@ -55,9 +60,14 @@ protected:
 private:
 	void StartWinSock();
 	
+
+public:
+	float m_serverTimestep;
+	int m_tick;
+
 private:
 	int m_client;
-
+	
 	net::UDPSocket* m_udpSocket;
 	net::TCPSocket* m_tcpSocket;
 	net::Address m_serverAddress;

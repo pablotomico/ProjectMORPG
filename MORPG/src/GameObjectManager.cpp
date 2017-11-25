@@ -33,28 +33,46 @@ GameObjectID GameObjectManager::CreateGameObject(bool l_drawable, bool l_control
 
 void GameObjectManager::UpdateGameObject(GameObjectID l_id, sf::Vector2f l_position) {
 	GameObject* gameObject = GetGameObject(l_id);
-	gameObject->SetPosition(l_position);
+	gameObject->SetPosition(l_position, -1);
+}
+
+void GameObjectManager::UpdateGameObject(GameObjectID l_id, sf::Vector2f l_position, int l_tick) {
+	GameObject* gameObject = GetGameObject(l_id);
+	gameObject->SetPosition(l_position, l_tick);
 }
 
 void GameObjectManager::RemoveGameObject(GameObjectID l_id) {}
+
+void GameObjectManager::Update(int l_tick, float l_deltaTime) {
+	for (auto& itr = m_gameObjects.begin(); itr != m_gameObjects.end(); ++itr) {
+		GameObject* gameObject = itr->second;
+		if (gameObject->IsControllable()) {
+			continue;
+		}
+		//printf("SIZE: %d\n", m_gameObjects.size());
+		gameObject->PredictPosition(l_tick, l_deltaTime);
+
+	}
+}
 
 void GameObjectManager::Notify(Message l_message) {
 	switch (l_message.m_type) {
 	case MessageType::M_GameObjectCreated:
 		{
-			GameObjectID id = CreateGameObject(true, true, "character_1.png");
+			GameObjectID id = CreateGameObject(true, false, "character_1.png");
 			GameObject* gameobject = GetGameObject(id);
 			gameobject->SetSpriteScale(0.25f, 0.25f);
+			gameobject->m_timestep = l_message.m_gameObjectCreated.m_timestep;
 
 			Message msg(MessageType::M_GameObjectCreated, System::S_NetworkControl);
-			msg.m_gameObjectIDs.first = l_message.m_gameObjectIDs.first;
-			msg.m_gameObjectIDs.second = id;
+			msg.m_gameObjectCreated.m_gameObjectIDs.first = l_message.m_gameObjectCreated.m_gameObjectIDs.first;
+			msg.m_gameObjectCreated.m_gameObjectIDs.second = id;
 			Send(msg);
 			break;
 		}
 	case MessageType::M_GameObject:
 		{
-			UpdateGameObject(l_message.m_gameObject.m_gameObjectID, l_message.m_gameObject.m_position); // TODO: time stamp here
+			UpdateGameObject(l_message.m_gameObject.m_gameObjectID, l_message.m_gameObject.m_position, l_message.m_gameObject.m_tick);
 		}
 		break;
 	}

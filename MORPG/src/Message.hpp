@@ -16,13 +16,16 @@ enum  MessageType {
 	M_KeyReleased,
 	M_GameObject,
 	M_GameObjectCreated,
-	M_Player
+	M_Player,
+	M_SetServerTimestep
 	// TODO: Come up with more types
 };
 
 struct GameObjectMessage {
-	GameObjectMessage(GameObjectID l_id, sf::Vector2f l_position, sf::Time l_time)
-		: m_gameObjectID(l_id), m_position(l_position), m_time(l_time) {}
+	GameObjectMessage(GameObjectID l_id, sf::Vector2f l_position)
+		: m_gameObjectID(l_id), m_position(l_position) {}
+	GameObjectMessage(GameObjectID l_id, sf::Vector2f l_position, int l_tick)
+		: m_gameObjectID(l_id), m_position(l_position), m_tick(l_tick) {}
 
 	void Print() {
 		printf("[%d] (%f, %f)\n", m_gameObjectID, m_position.x, m_position.y);
@@ -30,7 +33,12 @@ struct GameObjectMessage {
 
 	GameObjectID m_gameObjectID;
 	sf::Vector2f m_position;
-	sf::Time m_time;
+	int m_tick;
+};
+
+struct GameObjectCreated {
+	std::pair<int, GameObjectID> m_gameObjectIDs;
+	float m_timestep;
 };
 
 class Message {
@@ -38,7 +46,8 @@ public:
 	Message(MessageType l_type, System l_systemReceiver);
 	Message(MessageType l_type, System l_systemReceiver, const std::string& l_string);
 	Message(MessageType l_type, System l_systemReceiver, KeyCode l_keyCode);
-	Message(MessageType l_type, System l_systemReceiver, GameObjectID l_id, sf::Vector2f l_position, sf::Time l_time);
+	Message(MessageType l_type, System l_systemReceiver, GameObjectID l_id, sf::Vector2f l_position);
+	Message(MessageType l_type, System l_systemReceiver, GameObjectID l_id, sf::Vector2f l_position, int l_tick);
 
 	~Message();
 public:
@@ -47,8 +56,10 @@ public:
 	union {
 		std::string* m_string;
 		int m_integer;
+		float m_float;
 		KeyCode m_keyCode;
-		std::pair<int, GameObjectID> m_gameObjectIDs;
+		GameObjectCreated m_gameObjectCreated;
+		
 		GameObjectMessage m_gameObject;
 	};
 };

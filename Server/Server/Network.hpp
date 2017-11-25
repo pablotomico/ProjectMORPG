@@ -7,7 +7,7 @@
 #include <list>
 #include <unordered_map>
 #include <queue>
-
+#include <SFML/System.hpp>
 #include "Client.hpp"
 
 #pragma comment(lib, "ws2_32.lib")
@@ -15,6 +15,8 @@
 
 #define SERVERIP "127.0.0.1"
 #define SERVERPORT "5555"
+
+#define TIMESTEP 100
 
 
 
@@ -37,18 +39,24 @@ public:
 	bool ReadTCP(SOCKET l_tcpSocket);
 	bool WriteTCP(ClientID l_client);
 
-	void QueueTCPMessage(NetMessage l_message, SOCKET l_socket);
-
-public:
-	SOCKET m_serverTCPSocket;
-	SOCKET m_serverUDPSocket;
-	bool m_TCPWriteReady;
-	bool m_UDPWriteReady;
+	void QueueTCPMessage(NetMessage l_message, ClientID l_client);
 
 private:
 	void StartWinSock();
 
 	void ProcessMessage(const NetMessage* l_message);
+
+public:
+	int m_tick;
+	float m_timestep;
+	sf::Clock m_clock;
+	sf::Time m_netTime;
+
+	SOCKET m_serverTCPSocket;
+	SOCKET m_serverUDPSocket;
+	bool m_TCPWriteReady;
+	bool m_UDPWriteReady;
+
 private:
 	HWND m_window;
 	int m_clientCount;

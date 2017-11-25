@@ -5,6 +5,7 @@
 Network* m_network;
 HWND m_window;
 
+
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
@@ -65,6 +66,18 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 //
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+	if (m_network != NULL) {
+
+		if (m_network->m_netTime.asMilliseconds() > m_network->m_timestep) {
+			int deltaTick = floor(m_network->m_netTime.asMilliseconds() / m_network->m_timestep);
+			m_network->m_tick += deltaTick;
+			m_network->m_netTime -= sf::milliseconds(m_network->m_timestep * deltaTick);
+
+			printf("TICK: %d\n", m_network->m_tick);
+		}
+		m_network->m_netTime += m_network->m_clock.restart();
+	}
+
 	switch (message) {
 	case WM_DESTROY:
 		CloseWindow();
@@ -95,6 +108,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 
 
 void DrawWindow(HWND window) {
+
+
 	std::wstring message = L"Press Esc to exit\n";
 
 	PAINTSTRUCT ps;
@@ -103,6 +118,8 @@ void DrawWindow(HWND window) {
 	GetClientRect(window, &rt);
 	DrawText(hdc, message.c_str(), message.size(), &rt, DT_LEFT);
 	EndPaint(window, &ps);
+
+
 }
 
 void CloseWindow() {
@@ -126,15 +143,15 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 			if (WSAAsyncSelect(m_network->m_serverTCPSocket, m_window, WM_SOCKET, FD_CLOSE | FD_CONNECT | FD_READ | FD_ACCEPT) == SOCKET_ERROR) {
 				std::cerr << "WSAAsyncSelect failed\n";
 			}
-			
+
 			Client* client = m_network->RegisterClient(clientSocket, clientAddr);
 
 
 			NetMessage message;
 			message.m_type = NetMessage::Type::SET_CLIENT_ID;
-			message.m_clientID = client->m_id;
-
-			//send(clientSocket, (char *) &message, sizeof NetMessage, 0);
+			message.m_serverData.m_clientID = client->m_id;
+			message.m_serverData.m_serverTimestep = m_network->m_timestep;
+			message.m_tick = m_network->m_tick;
 
 			m_network->QueueTCPMessage(message, client->m_id);
 		}
@@ -163,6 +180,7 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 				std::unordered_map<SOCKET, ClientID>* clientSocket = m_network->GetClientSocket();
 				for (auto& itr = clientSocket->begin(); itr != clientSocket->end(); ++itr) {
 					if (itr->first == (SOCKET) wParam) {
+						printf("New TCP message from client\n");
 						if (m_network->ReadTCP((SOCKET) wParam)) {
 							break;
 						}

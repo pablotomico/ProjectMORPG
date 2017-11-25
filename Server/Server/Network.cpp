@@ -1,7 +1,7 @@
 #include "Network.hpp"
 #include <iostream>
 
-Network::Network(HWND l_window) : m_availableID(0), m_window(l_window), m_clientCount(0), m_TCPWriteReady(false), m_UDPWriteReady(false), m_tcpReadCount(0){
+Network::Network(HWND l_window) : m_availableID(0), m_window(l_window), m_clientCount(0), m_TCPWriteReady(false), m_UDPWriteReady(false), m_tcpReadCount(0), m_tick(0), m_timestep(TIMESTEP) {
 	StartWinSock();
 	m_serverTCPSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (m_serverTCPSocket == INVALID_SOCKET) {
@@ -159,7 +159,7 @@ bool Network::ReadTCP(SOCKET l_tcpSocket) {
 		return false;
 	}
 
-	
+
 
 	return false;
 }
@@ -173,7 +173,7 @@ bool Network::WriteTCP(ClientID l_client) {
 		NetMessage message = client->m_tcpMsgQueue.front();
 
 		memcpy(client->m_tcpWriteBuffer, &message, sizeof NetMessage);
-		
+
 		for (;;) {
 			int count = send(client->m_tcpSocket, (const char *) &client->m_tcpWriteBuffer + client->m_tcpWriteCount, (sizeof NetMessage) - client->m_tcpWriteCount, 0);
 			if (count == SOCKET_ERROR) {
@@ -229,7 +229,7 @@ void Network::ProcessMessage(const NetMessage* l_message) {
 		message.m_data.m_clientID = l_message->m_data.m_clientID;
 		message.m_data.x = l_message->m_data.x;
 		message.m_data.y = l_message->m_data.y;
-
+		message.m_tick = l_message->m_tick;
 
 		m_udpMsgQueue.push(message);
 		printf("[%d] -> (%f, %f)\n", l_message->m_data.m_clientID, l_message->m_data.x, l_message->m_data.y);
@@ -239,7 +239,7 @@ void Network::ProcessMessage(const NetMessage* l_message) {
 		message.m_data.m_clientID = l_message->m_initialData.m_clientID;
 		message.m_data.x = l_message->m_initialData.x;
 		message.m_data.y = l_message->m_initialData.y;
-
+		message.m_tick = l_message->m_tick;
 
 		m_udpMsgQueue.push(message);
 		if (WSAAsyncSelect(m_serverUDPSocket, m_window, WM_SOCKET, FD_READ | FD_WRITE) == SOCKET_ERROR) {

@@ -42,9 +42,13 @@ void Game::Init() {
 
 void Game::Update() {
 	float deltaTime = m_elapsed.asSeconds() * 1000;
-
-	if (m_networkTime.asMilliseconds() > NETWORK_TIMESTEP) {
+	bool writeNetwork = false;
+	if (m_networkTime.asMilliseconds() > m_networkSystem.m_serverTimestep) {
+		int deltaTick = floor(m_networkTime.asMilliseconds() / m_networkSystem.m_serverTimestep);
+		m_networkSystem.m_tick += deltaTick;
+		m_networkTime -= sf::milliseconds(m_networkSystem.m_serverTimestep * deltaTick);
 		m_networkSystem.ReadNetwork();
+		writeNetwork = true;
 	}
 
 	m_window.Update(deltaTime);
@@ -52,9 +56,10 @@ void Game::Update() {
 	m_controlSystem.Update(deltaTime);
 	m_networkSystem.Update();
 
-	if (m_networkTime.asMilliseconds() > NETWORK_TIMESTEP) {
+	m_gameObjectManager.Update(m_networkSystem.m_tick, m_networkTime.asMilliseconds());
+
+	if (writeNetwork) {
 		m_networkSystem.WriteNetwork();
-		m_networkTime -= sf::milliseconds(NETWORK_TIMESTEP);
 	}
 
 	m_renderSystem.Update(deltaTime);

@@ -19,12 +19,27 @@ sf::Vector2f GameObject::GetPosition() {
 	return m_position;
 }
 
+std::pair<int, sf::Vector2f> GameObject::GetNetPosition() {
+	return m_netPosition;
+}
+
 sf::Sprite& GameObject::GetSprite() {
 	return m_sprite;
 }
 
-void GameObject::SetPosition(const sf::Vector2f & l_position) {
-	m_position = l_position;
+void GameObject::SetPosition(const sf::Vector2f & l_position, int l_tick) {
+	if (l_tick > -1) {
+		int deltaTick = l_tick - m_netPosition.first;
+		if (deltaTick == 0) {
+			return;
+		}
+		m_velocity.x = (l_position.x - m_netPosition.second.x) / (deltaTick * m_timestep);
+		m_velocity.y = (l_position.y - m_netPosition.second.y) / (deltaTick * m_timestep);
+		m_netPosition = std::pair<int, sf::Vector2f>(l_tick, l_position);
+	} else {
+
+		m_position = l_position;
+	}
 }
 
 void GameObject::SetSprite(const std::string& l_texture) {
@@ -38,6 +53,20 @@ void GameObject::SetSprite(const std::string& l_texture) {
 
 void GameObject::SetSpriteScale(const float l_x, const float l_y) {
 	m_sprite.setScale(l_x, l_y);
+}
+
+
+void GameObject::PredictPosition(int l_tick, float l_deltaTime) {
+	int deltaTick = l_tick - m_netPosition.first;
+	m_position.x = m_netPosition.second.x + m_velocity.x * l_deltaTime;
+	m_position.y = m_netPosition.second.y + m_velocity.y * l_deltaTime;
+
+	if (m_velocity.x > 0 || m_velocity.y > 0) {
+
+		/*printf("[%d] PREDICTION:\n", m_id);
+		printf("\tLAST POSITION RECEIVED = (%f, %f) ON TICK %d\n", m_netPosition.second.x, m_netPosition.second.y, m_netPosition.first);
+		printf("\tPOSITION PREDICTED     = (%f, %f) ON TICK %d VELOCITY = (%f, %f)\n\n", m_position.x, m_position.y, l_tick, m_velocity.x, m_velocity.y);*/
+	}
 }
 
 bool GameObject::IsDrawable() {

@@ -19,11 +19,16 @@ public:
 		float x;
 		float y;
 	};
+	struct ServerData {
+		int m_clientID;
+		float m_serverTimestep;
+	};
 
 public:
 	Type m_type;
+	int m_tick;
 	union {
-		int m_clientID;
+		ServerData m_serverData;
 		InitialData m_initialData;
 		Data m_data;
 	};
