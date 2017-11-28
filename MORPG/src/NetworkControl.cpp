@@ -11,7 +11,7 @@ void NetworkControl::RegisterClient(int l_clientID) {
 }
 
 void NetworkControl::AddClientGameObject(int l_clientID, GameObjectID l_gameObjectID) {
-	printf("Adding Client GameObject %d-%d", l_clientID, l_gameObjectID);
+	printf("Adding Client GameObject %d-%d\n", l_clientID, l_gameObjectID);
 	m_clientGameObjectMap[l_clientID] = l_gameObjectID;
 }
 

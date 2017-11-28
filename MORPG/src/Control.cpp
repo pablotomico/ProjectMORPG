@@ -50,6 +50,17 @@ void Control::Notify(Message l_message) {
 			}
 
 			UpdateMovement();
+
+			if (l_message.m_keyCode == sf::Keyboard::Num1) {
+				Message message(MessageType::M_CastSpell, System::S_Network);
+				SpellData spell;
+				spell.m_spellID = 1;
+				spell.m_duration = 1.0f;
+				message.m_spellData = spell;
+
+				
+				Send(message);
+			}
 		}
 		break;
 	case MessageType::M_KeyHold:

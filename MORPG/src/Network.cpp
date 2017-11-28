@@ -36,29 +36,38 @@ void Network::ReadNetwork() {
 		if (aux == -1) {
 			break;
 		}
-		if (msg.m_type == NetMessage::Type::SET_CLIENT_ID) {
-			printf("SERVER: Set ClientID to %d\n", msg.m_serverData.m_clientID);
-			m_client = msg.m_serverData.m_clientID;
-			m_serverTimestep = msg.m_serverData.m_serverTimestep;
+		switch (msg.m_type) {
+		case NetMessage::Type::SET_CLIENT_ID:
+			{
+				printf("SERVER: Set ClientID to %d\n", msg.m_serverData.m_clientID);
+				m_client = msg.m_serverData.m_clientID;
+				m_serverTimestep = msg.m_serverData.m_serverTimestep;
 
-			Message msg(MessageType::M_SetServerTimestep, System::S_NetworkControl);
-			msg.m_float = m_serverTimestep;
-			Send(msg);
+				Message msg(MessageType::M_SetServerTimestep, System::S_NetworkControl);
+				msg.m_float = m_serverTimestep;
+				Send(msg);
 
-			NetMessage netmsg;
-			netmsg.m_type = NetMessage::Type::INITIAL_DATA;
-			netmsg.m_initialData.m_clientID = m_client;
-			std::string username("XxmusikitoxX");
-			memcpy(netmsg.m_initialData.m_username, username.c_str(), username.length());
-			netmsg.m_initialData.m_username[username.length()] = '\0';
+				NetMessage netmsg;
+				netmsg.m_type = NetMessage::Type::INITIAL_DATA;
+				netmsg.m_initialData.m_clientID = m_client;
+				std::string username("XxmusikitoxX");
+				memcpy(netmsg.m_initialData.m_username, username.c_str(), username.length());
+				netmsg.m_initialData.m_username[username.length()] = '\0';
 
-			netmsg.m_initialData.x = 0;
-			netmsg.m_initialData.y = 0;
+				netmsg.m_initialData.x = 0;
+				netmsg.m_initialData.y = 0;
 
-			netmsg.m_tick = m_tick;
+				netmsg.m_tick = m_tick;
 
-			printf("Sending Initial Data...\n");
-			m_tcpWriteQueue.push(netmsg);
+				printf("Sending Initial Data...\n");
+				m_tcpWriteQueue.push(netmsg);
+			}
+			break;
+		case NetMessage::Type::CAST_SPELL:
+			{
+				printf("[%d] Casting spell %d in TICK %d, finishing in TICK %d (we are in tick %d)\n", msg.m_spellData.m_clientID, msg.m_spellData.m_spellID, msg.m_tick, msg.m_spellData.m_endTick, m_tick);
+			}
+			break;
 		}
 
 		//printf("\t\t\tSERVER: [%d] -> (%f, %f)\n", msg.m_client, msg.m_x, msg.m_y);
@@ -119,16 +128,29 @@ void Network::WriteNetwork() {
 }
 
 void Network::Notify(Message l_message) {
-	if (l_message.m_type == MessageType::M_GameObject) {
-		//l_message.m_gameObject.Print();
-		NetMessage message;
-		message.m_type = NetMessage::Type::DATA;
-		message.m_data.m_clientID = m_client;
-		message.m_data.x = l_message.m_gameObject.m_position.x;
-		message.m_data.y = l_message.m_gameObject.m_position.y;
-		message.m_tick = m_tick;
+	switch (l_message.m_type) {
+	case MessageType::M_GameObject:
+		{
+			NetMessage message;
+			message.m_type = NetMessage::Type::DATA;
+			message.m_data.m_clientID = m_client;
+			message.m_data.x = l_message.m_gameObject.m_position.x;
+			message.m_data.y = l_message.m_gameObject.m_position.y;
+			message.m_tick = m_tick;
 
-		m_udpWriteQueue.push(message);
+			m_udpWriteQueue.push(message);
+		}
+		break;
+	case MessageType::M_CastSpell:
+		NetMessage message;
+		message.m_type = NetMessage::Type::CAST_SPELL;
+		message.m_spellData.m_clientID = m_client;
+		message.m_spellData.m_spellID = l_message.m_spellData.m_spellID;
+		message.m_spellData.m_duration = l_message.m_spellData.m_duration;
+		message.m_tick = m_tick;
+		printf("Cast spell %d! (%f seconds)\n", message.m_spellData.m_spellID, message.m_spellData.m_duration);
+		m_tcpWriteQueue.push(message);
+		break;
 	}
 }
 

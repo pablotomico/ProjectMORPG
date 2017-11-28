@@ -123,7 +123,7 @@ bool Network::WriteUDP() {
 		m_udpMsgQueue.pop();
 
 		for (auto& itr = m_clients.begin(); itr != m_clients.end(); ++itr) {
-			printf("TO->[%d]\tINFO:[%d] -> (%f, %f) Type %d\n", itr->first, message.m_data.m_clientID, message.m_data.x, message.m_data.y, (int) message.m_type);
+			//printf("TO->[%d]\tINFO:[%d] -> (%f, %f) Type %d\n", itr->first, message.m_data.m_clientID, message.m_data.x, message.m_data.y, (int) message.m_type);
 			int count = sendto(m_serverUDPSocket, (const char*) &message, sizeof NetMessage, 0, (const sockaddr *) &(itr->second->m_address), sizeof(itr->second->m_address));
 			if (count == SOCKET_ERROR) {
 				if (WSAGetLastError() == WSAEWOULDBLOCK) {
@@ -206,6 +206,10 @@ bool Network::WriteTCP(ClientID l_client) {
 void Network::QueueTCPMessage(NetMessage l_message, ClientID l_client) {
 	Client* client = m_clients[l_client];
 	client->m_tcpMsgQueue.push(l_message);
+	if (WSAAsyncSelect(client->m_tcpSocket, m_window, WM_SOCKET, FD_CLOSE | FD_READ | FD_WRITE) == SOCKET_ERROR) {
+		printf("TCP Client WSAAsyncSelect failed\n");
+		return;
+	}
 }
 
 
@@ -221,32 +225,52 @@ void Network::StartWinSock() {
 }
 
 void Network::ProcessMessage(const NetMessage* l_message) {
-	if (l_message->m_type == NetMessage::Type::DATA) {
+	switch (l_message->m_type) {
+	case NetMessage::Type::DATA:
+		{
+			NetMessage message;
+			message.m_type = l_message->m_type;
+			message.m_data.m_clientID = l_message->m_data.m_clientID;
+			message.m_data.x = l_message->m_data.x;
+			message.m_data.y = l_message->m_data.y;
+			message.m_tick = l_message->m_tick;
 
-
-		NetMessage message;
-		message.m_type = l_message->m_type;
-		message.m_data.m_clientID = l_message->m_data.m_clientID;
-		message.m_data.x = l_message->m_data.x;
-		message.m_data.y = l_message->m_data.y;
-		message.m_tick = l_message->m_tick;
-
-		m_udpMsgQueue.push(message);
-		printf("[%d] -> (%f, %f)\n", l_message->m_data.m_clientID, l_message->m_data.x, l_message->m_data.y);
-	} else if (l_message->m_type == NetMessage::Type::INITIAL_DATA) {
-		NetMessage message;
-		message.m_type = NetMessage::Type::DATA;
-		message.m_data.m_clientID = l_message->m_initialData.m_clientID;
-		message.m_data.x = l_message->m_initialData.x;
-		message.m_data.y = l_message->m_initialData.y;
-		message.m_tick = l_message->m_tick;
-
-		m_udpMsgQueue.push(message);
-		if (WSAAsyncSelect(m_serverUDPSocket, m_window, WM_SOCKET, FD_READ | FD_WRITE) == SOCKET_ERROR) {
-			std::cerr << "WSAAsyncSelect failed\n";
+			m_udpMsgQueue.push(message);
+			//printf("[%d] -> (%f, %f)\n", l_message->m_data.m_clientID, l_message->m_data.x, l_message->m_data.y);
 		}
-		printf("%s has joined the server, welcome!\n", l_message->m_initialData.m_username);
-		//printf("[%s][%d] -> (%f, %f)\n",l_message->m_initialData.m_username, l_message->m_initialData.m_clientID, l_message->m_initialData.x, l_message->m_initialData.y);
+		break;
+	case NetMessage::Type::INITIAL_DATA:
+		{
+			NetMessage message;
+			message.m_type = NetMessage::Type::DATA;
+			message.m_data.m_clientID = l_message->m_initialData.m_clientID;
+			message.m_data.x = l_message->m_initialData.x;
+			message.m_data.y = l_message->m_initialData.y;
+			message.m_tick = l_message->m_tick;
+
+			m_udpMsgQueue.push(message);
+			if (WSAAsyncSelect(m_serverUDPSocket, m_window, WM_SOCKET, FD_READ | FD_WRITE) == SOCKET_ERROR) {
+				std::cerr << "WSAAsyncSelect failed\n";
+			}
+			printf("%s has joined the server, welcome!\n", l_message->m_initialData.m_username);
+			//printf("[%s][%d] -> (%f, %f)\n",l_message->m_initialData.m_username, l_message->m_initialData.m_clientID, l_message->m_initialData.x, l_message->m_initialData.y);
+		}
+		break;
+	case NetMessage::Type::CAST_SPELL:
+		{
+			int tick = l_message->m_tick + (l_message->m_spellData.m_duration * 1000) / m_timestep;
+			printf("[%d] Cast spell %d in TICK %d, finishing in TICK %d (duration %f seconds)\n", l_message->m_spellData.m_clientID, l_message->m_spellData.m_spellID, l_message->m_tick, tick, l_message->m_spellData.m_duration);
+			NetMessage message;
+			message.m_type = l_message->m_type;
+			message.m_tick = l_message->m_tick;
+			message.m_spellData = l_message->m_spellData;
+			message.m_spellData.m_endTick = tick;
+			for (auto& itr = m_clients.begin(); itr != m_clients.end(); ++itr) {
+				QueueTCPMessage(message, itr->first);
+				//itr->second->m_tcpMsgQueue.push(message);
+			}
+		}
+		break;
 	}
 }
 

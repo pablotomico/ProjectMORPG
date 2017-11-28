@@ -73,7 +73,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 			m_network->m_tick += deltaTick;
 			m_network->m_netTime -= sf::milliseconds(m_network->m_timestep * deltaTick);
 
-			printf("TICK: %d\n", m_network->m_tick);
+			//printf("TICK: %d\n", m_network->m_tick);
 		}
 		m_network->m_netTime += m_network->m_clock.restart();
 	}
@@ -169,18 +169,18 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 
 	case FD_READ:
 		{
-			printf("FD_READ on SOCKET %d\n", (SOCKET) wParam);
+			//printf("FD_READ on SOCKET %d\n", (SOCKET) wParam);
 			if (m_network->m_serverUDPSocket == (SOCKET) wParam) {
-				printf("New UDP message\n");
+				//printf("New UDP message\n");
 				m_network->ReadUDP();
 				m_network->WriteUDP();
 			} else if (m_network->m_serverTCPSocket == (SOCKET) wParam) {
-				printf("New TCP message\n");
+				//printf("New TCP message\n");
 			} else {
 				std::unordered_map<SOCKET, ClientID>* clientSocket = m_network->GetClientSocket();
 				for (auto& itr = clientSocket->begin(); itr != clientSocket->end(); ++itr) {
 					if (itr->first == (SOCKET) wParam) {
-						printf("New TCP message from client\n");
+						//printf("New TCP message from client\n");
 						if (m_network->ReadTCP((SOCKET) wParam)) {
 							break;
 						}
@@ -191,7 +191,7 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 		break;
 	case FD_WRITE:
 		{
-			printf("FD_WRITE on SOCKET %d\n", (SOCKET) wParam);
+			//printf("FD_WRITE on SOCKET %d\n", (SOCKET) wParam);
 			if (m_network->m_serverUDPSocket == (SOCKET) wParam) {
 				m_network->WriteUDP();
 			} else {

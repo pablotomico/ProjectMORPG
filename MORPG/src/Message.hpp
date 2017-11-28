@@ -17,7 +17,8 @@ enum  MessageType {
 	M_GameObject,
 	M_GameObjectCreated,
 	M_Player,
-	M_SetServerTimestep
+	M_SetServerTimestep,
+	M_CastSpell
 	// TODO: Come up with more types
 };
 
@@ -41,6 +42,11 @@ struct GameObjectCreated {
 	float m_timestep;
 };
 
+struct SpellData {
+	int m_spellID;
+	float m_duration;
+};
+
 class Message {
 public:
 	Message(MessageType l_type, System l_systemReceiver);
@@ -59,7 +65,7 @@ public:
 		float m_float;
 		KeyCode m_keyCode;
 		GameObjectCreated m_gameObjectCreated;
-		
 		GameObjectMessage m_gameObject;
+		SpellData m_spellData;
 	};
 };

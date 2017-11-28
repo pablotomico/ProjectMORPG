@@ -15,7 +15,8 @@ public:
 	enum Type {
 		SET_CLIENT_ID,
 		INITIAL_DATA,
-		DATA
+		DATA,
+		CAST_SPELL
 	};
 	struct InitialData {
 		int m_clientID;
@@ -34,6 +35,13 @@ public:
 		float m_serverTimestep;
 	};
 
+	struct SpellData {
+		int m_clientID;
+		int m_spellID;
+		float m_duration;
+		int m_endTick;
+	};
+
 public:
 	Type m_type;
 	int m_tick;
@@ -41,6 +49,7 @@ public:
 		ServerData m_serverData;
 		InitialData m_initialData;
 		Data m_data;
+		SpellData m_spellData;
 	};
 };
 
