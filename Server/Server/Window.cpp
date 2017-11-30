@@ -67,6 +67,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
 	if (m_network != NULL) {
+		m_network->m_netTime += m_network->m_clock.restart();
 
 		if (m_network->m_netTime.asMilliseconds() > m_network->m_timestep) {
 			int deltaTick = floor(m_network->m_netTime.asMilliseconds() / m_network->m_timestep);
@@ -75,7 +76,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 
 			//printf("TICK: %d\n", m_network->m_tick);
 		}
-		m_network->m_netTime += m_network->m_clock.restart();
+
 	}
 
 	switch (message) {
@@ -103,6 +104,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	default:
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
+	//if (m_network != NULL)
 	return 0;
 }
 
@@ -152,6 +154,7 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 			message.m_serverData.m_clientID = client->m_id;
 			message.m_serverData.m_serverTimestep = m_network->m_timestep;
 			message.m_tick = m_network->m_tick;
+			printf("[%d] Connected player\n", m_network->m_tick);
 
 			m_network->QueueTCPMessage(message, client->m_id);
 		}
