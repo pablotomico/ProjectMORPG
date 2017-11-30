@@ -36,8 +36,8 @@ void Game::Init() {
 	gameobject->SetSpriteScale(0.25f, 0.25f);
 
 
-
 	m_controlSystem.SetControlledGameObject(id);
+	m_networkSystem.SetControlledGameObject(id);
 }
 
 void Game::Update() {
@@ -46,6 +46,7 @@ void Game::Update() {
 	if (m_networkTime.asMilliseconds() > m_networkSystem.m_serverTimestep) {
 		int deltaTick = floor(m_networkTime.asMilliseconds() / m_networkSystem.m_serverTimestep);
 		m_networkSystem.m_tick += deltaTick;
+		//printf("TICK: %d\n", m_networkSystem.m_tick);
 		m_networkTime -= sf::milliseconds(m_networkSystem.m_serverTimestep * deltaTick);
 		m_networkSystem.ReadNetwork();
 		writeNetwork = true;

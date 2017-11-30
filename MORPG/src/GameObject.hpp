@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "Definitions.hpp"
 #include "TextureManager.hpp"
+#include "Spell.hpp"
 
 using GameObjectID = unsigned int;
 
@@ -13,8 +14,8 @@ public:
 	~GameObject();
 
 	virtual void OnCreate() {}
-	virtual void Update() {}
 	virtual void OnDestroy() {}
+	void Update(int l_tick, float l_deltaTime);
 
 	GameObjectID GetGameObjectID();
 
@@ -25,6 +26,10 @@ public:
 	void SetPosition(const sf::Vector2f& l_position, int l_tick);
 	void SetSprite(const std::string& l_texture);
 	void SetSpriteScale(const float l_x, const float l_y);
+
+
+	void CastSpell(int l_endTick, int l_spellID);
+	void ThrowSpell();
 
 	void PredictPosition(int l_tick, float l_deltaTime);
 
@@ -53,7 +58,8 @@ private:
 	sf::Sprite m_sprite;
 	std::string m_texture;
 
-	
+	bool m_castingSpell;
+	SpellCast m_spellCast;
 
 	TextureManager* m_textureManager;
 

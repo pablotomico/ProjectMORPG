@@ -46,12 +46,7 @@ void GameObjectManager::RemoveGameObject(GameObjectID l_id) {}
 void GameObjectManager::Update(int l_tick, float l_deltaTime) {
 	for (auto& itr = m_gameObjects.begin(); itr != m_gameObjects.end(); ++itr) {
 		GameObject* gameObject = itr->second;
-		if (gameObject->IsControllable()) {
-			continue;
-		}
-		//printf("SIZE: %d\n", m_gameObjects.size());
-		gameObject->PredictPosition(l_tick, l_deltaTime);
-
+		gameObject->Update(l_tick, l_deltaTime);
 	}
 }
 
@@ -73,6 +68,13 @@ void GameObjectManager::Notify(Message l_message) {
 	case MessageType::M_GameObject:
 		{
 			UpdateGameObject(l_message.m_gameObject.m_gameObjectID, l_message.m_gameObject.m_position, l_message.m_gameObject.m_tick);
+		}
+		break;
+
+	case MessageType::M_CastSpell:
+		{
+			GameObject* gameobject = GetGameObject(l_message.m_gameObjectSpellData.first);
+			gameobject->CastSpell(l_message.m_gameObjectSpellData.second.m_endTick, l_message.m_gameObjectSpellData.second.m_spellID);
 		}
 		break;
 	}

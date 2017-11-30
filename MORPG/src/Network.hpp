@@ -63,6 +63,8 @@ public:
 	void ReadNetwork();
 	void WriteNetwork();
 
+	void SetControlledGameObject(GameObjectID l_id);
+
 protected:
 	void Notify(Message l_message);
 
@@ -76,6 +78,7 @@ public:
 
 private:
 	int m_client;
+	GameObjectID m_controlledGameObject;
 	
 	net::UDPSocket* m_udpSocket;
 	net::TCPSocket* m_tcpSocket;

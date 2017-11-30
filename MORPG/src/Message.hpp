@@ -1,5 +1,5 @@
 #pragma once
-
+#include <utility>
 #include <iostream>
 #include <SFML/Window.hpp>
 #include "Systems.hpp"
@@ -44,7 +44,10 @@ struct GameObjectCreated {
 
 struct SpellData {
 	int m_spellID;
-	float m_duration;
+	union {
+		float m_duration;
+		int m_endTick;
+	};
 };
 
 class Message {
@@ -67,5 +70,6 @@ public:
 		GameObjectCreated m_gameObjectCreated;
 		GameObjectMessage m_gameObject;
 		SpellData m_spellData;
+		std::pair<GameObjectID, SpellData> m_gameObjectSpellData;
 	};
 };

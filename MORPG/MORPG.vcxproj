@@ -200,6 +200,7 @@
     <ClInclude Include="src\NetworkControl.hpp" />
     <ClInclude Include="src\Observer.hpp" />
     <ClInclude Include="src\Renderer.hpp" />
+    <ClInclude Include="src\Spell.hpp" />
     <ClInclude Include="src\Systems.hpp" />
     <ClInclude Include="src\TextureManager.hpp" />
     <ClInclude Include="src\Utilities.hpp" />

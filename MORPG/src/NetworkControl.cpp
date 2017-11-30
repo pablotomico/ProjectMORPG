@@ -47,5 +47,12 @@ void NetworkControl::Notify(Message l_message) {
 	case MessageType::M_SetServerTimestep:
 		m_timestep = l_message.m_float;
 		break;
+	case MessageType::M_CastSpell:
+		l_message.m_systemReceiver = System::S_GameObjectManager;
+		GameObjectID id = m_clientGameObjectMap[l_message.m_gameObjectSpellData.first];
+		l_message.m_gameObjectSpellData.first = id;
+
+		Send(l_message);
+		break;
 	}
 }

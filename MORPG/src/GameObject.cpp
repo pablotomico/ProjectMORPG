@@ -11,6 +11,21 @@ GameObject::~GameObject() {
 	OnDestroy();
 }
 
+void GameObject::Update(int l_tick, float l_deltaTime) {
+
+	if (m_castingSpell && m_spellCast.first == l_tick) {
+		ThrowSpell();
+	}
+
+	if (!IsControllable()) {
+		PredictPosition(l_tick, l_deltaTime);
+	}
+
+
+	//printf("SIZE: %d\n", m_gameObjects.size());
+	
+}
+
 GameObjectID GameObject::GetGameObjectID() {
 	return m_id;
 }
@@ -53,6 +68,23 @@ void GameObject::SetSprite(const std::string& l_texture) {
 
 void GameObject::SetSpriteScale(const float l_x, const float l_y) {
 	m_sprite.setScale(l_x, l_y);
+}
+
+void GameObject::CastSpell(int l_endTick, int l_spellID) {
+	if (m_castingSpell) {
+		printf("Already casting a spell!\n");
+		return;
+	}
+	m_castingSpell = true;
+
+	m_spellCast.first = l_endTick;
+	m_spellCast.second = l_spellID;
+}
+
+void GameObject::ThrowSpell() {
+	m_castingSpell = false;
+
+	printf("Spell %d finished!\n", m_spellCast.second);
 }
 
 

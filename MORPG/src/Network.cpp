@@ -39,12 +39,18 @@ void Network::ReadNetwork() {
 		switch (msg.m_type) {
 		case NetMessage::Type::SET_CLIENT_ID:
 			{
-				printf("SERVER: Set ClientID to %d\n", msg.m_serverData.m_clientID);
 				m_client = msg.m_serverData.m_clientID;
 				m_serverTimestep = msg.m_serverData.m_serverTimestep;
+				m_tick = msg.m_tick;
+				printf("SERVER: \n\tClientID = %d\n\tTimeStep = %f\n\tTick = %d\n", m_client, m_serverTimestep, m_tick);
 
 				Message msg(MessageType::M_SetServerTimestep, System::S_NetworkControl);
 				msg.m_float = m_serverTimestep;
+				Send(msg);
+
+				msg.m_type = MessageType::M_GameObjectCreated;
+				msg.m_gameObjectCreated.m_gameObjectIDs.first = m_client;
+				msg.m_gameObjectCreated.m_gameObjectIDs.second = m_controlledGameObject;
 				Send(msg);
 
 				NetMessage netmsg;
@@ -65,7 +71,17 @@ void Network::ReadNetwork() {
 			break;
 		case NetMessage::Type::CAST_SPELL:
 			{
+				Message message(MessageType::M_CastSpell, System::S_NetworkControl);
+				SpellData spell;
+				spell.m_spellID = msg.m_spellData.m_spellID;
+				spell.m_endTick = msg.m_spellData.m_endTick;
+
+				message.m_gameObjectSpellData.second = spell;
+				message.m_gameObjectSpellData.first = msg.m_spellData.m_clientID;
 				printf("[%d] Casting spell %d in TICK %d, finishing in TICK %d (we are in tick %d)\n", msg.m_spellData.m_clientID, msg.m_spellData.m_spellID, msg.m_tick, msg.m_spellData.m_endTick, m_tick);
+
+				Send(message);
+
 			}
 			break;
 		}
@@ -125,6 +141,10 @@ void Network::WriteNetwork() {
 
 
 
+}
+
+void Network::SetControlledGameObject(GameObjectID l_id) {
+	m_controlledGameObject = l_id;
 }
 
 void Network::Notify(Message l_message) {
