@@ -16,7 +16,9 @@ enum  MessageType {
 	M_KeyReleased,
 	M_GameObject,
 	M_GameObjectCreated,
+	M_GameObjectDeleted,
 	M_Player,
+	M_PlayerConnected,
 	M_SetServerTimestep,
 	M_CastSpell
 	// TODO: Come up with more types
@@ -38,6 +40,7 @@ struct GameObjectMessage {
 };
 
 struct GameObjectCreated {
+	char m_name[16];
 	std::pair<int, GameObjectID> m_gameObjectIDs;
 	float m_timestep;
 };
@@ -50,6 +53,11 @@ struct SpellData {
 	};
 };
 
+struct PlayerData {
+	int m_id;
+	char m_username[16];
+};
+
 class Message {
 public:
 	Message(MessageType l_type, System l_systemReceiver);
@@ -57,6 +65,7 @@ public:
 	Message(MessageType l_type, System l_systemReceiver, KeyCode l_keyCode);
 	Message(MessageType l_type, System l_systemReceiver, GameObjectID l_id, sf::Vector2f l_position);
 	Message(MessageType l_type, System l_systemReceiver, GameObjectID l_id, sf::Vector2f l_position, int l_tick);
+
 
 	~Message();
 public:
@@ -71,5 +80,6 @@ public:
 		GameObjectMessage m_gameObject;
 		SpellData m_spellData;
 		std::pair<GameObjectID, SpellData> m_gameObjectSpellData;
+		PlayerData m_playerData;
 	};
 };

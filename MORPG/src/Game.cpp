@@ -12,6 +12,17 @@ Game::Game()
 	, m_networkSystem(&m_messageSystem)
 	, m_networkControlSystem(&m_messageSystem) {}
 
+Game::Game(std::string l_username)
+	: m_username(l_username)
+	, m_inputSystem(&m_messageSystem)
+	, m_gameObjectManager(&m_messageSystem, &m_textureManager)
+	, m_gameObjects(m_gameObjectManager.GetGameObjectContainer())
+	, m_controlSystem(&m_messageSystem, m_gameObjects)
+	, m_window(&m_messageSystem, WINDOW_TITLE, sf::Vector2u(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), &m_inputSystem)
+	, m_renderSystem(&m_messageSystem, m_gameObjects, &m_window)
+	, m_networkSystem(&m_messageSystem, l_username)
+	, m_networkControlSystem(&m_messageSystem) {}
+
 Game::~Game() {}
 
 void Game::Play() {
@@ -31,7 +42,7 @@ sf::Time Game::GetElapsedTime() {
 
 void Game::Init() {
 	// Init GameObjects
-	GameObjectID id = m_gameObjectManager.CreateGameObject(true, true, "character_1.png");
+	GameObjectID id = m_gameObjectManager.CreateGameObject(m_username, true, true, "character_1.png");
 	GameObject* gameobject = m_gameObjectManager.GetGameObject(id);
 	gameobject->SetSpriteScale(0.25f, 0.25f);
 

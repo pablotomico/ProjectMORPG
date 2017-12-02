@@ -196,6 +196,7 @@
     <ClInclude Include="src\NetFramework\include\Socket.hpp" />
     <ClInclude Include="src\NetFramework\include\TCPSocket.hpp" />
     <ClInclude Include="src\NetFramework\include\UDPSocket.hpp" />
+    <ClInclude Include="src\NetMessage.hpp" />
     <ClInclude Include="src\Network.hpp" />
     <ClInclude Include="src\NetworkControl.hpp" />
     <ClInclude Include="src\Observer.hpp" />

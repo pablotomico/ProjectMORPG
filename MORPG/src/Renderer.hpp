@@ -19,4 +19,6 @@ protected:
 private:
 	GameObjectContainer* m_gameObjects;
 	Window* m_window;
+
+	sf::Font m_font;
 };

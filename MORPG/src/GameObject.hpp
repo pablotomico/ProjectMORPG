@@ -10,7 +10,7 @@ using GameObjectID = unsigned int;
 
 class GameObject {
 public:
-	GameObject(GameObjectID l_gameObjectID, bool l_isDrawable = false, bool l_isControllable = false, TextureManager* l_textureManager = nullptr);
+	GameObject(GameObjectID l_gameObjectID, std::string l_name, bool l_isDrawable = false, bool l_isControllable = false, TextureManager* l_textureManager = nullptr);
 	~GameObject();
 
 	virtual void OnCreate() {}
@@ -22,11 +22,11 @@ public:
 	sf::Vector2f GetPosition();
 	std::pair<int, sf::Vector2f> GetNetPosition();
 	sf::Sprite& GetSprite();
+	sf::Text& GetNameText();
 
 	void SetPosition(const sf::Vector2f& l_position, int l_tick);
 	void SetSprite(const std::string& l_texture);
 	void SetSpriteScale(const float l_x, const float l_y);
-
 
 	void CastSpell(int l_endTick, int l_spellID);
 	void ThrowSpell();
@@ -48,6 +48,9 @@ public:
 
 public:
 	float m_timestep;
+	sf::Vector2f m_spriteOffset;
+
+	std::string m_name;
 
 private:
 	GameObjectID m_id;
@@ -56,6 +59,8 @@ private:
 	std::pair<int, sf::Vector2f> m_netPosition;
 	sf::Vector2f m_velocity;
 	sf::Sprite m_sprite;
+	sf::Text m_nameText;
+
 	std::string m_texture;
 
 	bool m_castingSpell;

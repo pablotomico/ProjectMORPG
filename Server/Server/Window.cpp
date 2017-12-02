@@ -165,6 +165,7 @@ void HandleSocketEvent(LPARAM lParam, WPARAM wParam) {
 			ClientID clientID = m_network->GetClientID((SOCKET) wParam);
 			if (clientID != -1) {
 				printf("Client [%d] disconected (SOCKET %d)\n", clientID, (SOCKET) wParam);
+				m_network->NotifyDisconnection(clientID);
 				m_network->RemoveClient(clientID, (SOCKET) wParam);
 			}
 		}

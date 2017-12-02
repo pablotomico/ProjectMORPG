@@ -12,7 +12,7 @@ public:
 	GameObjectContainer* GetGameObjectContainer();
 	GameObject* GetGameObject(GameObjectID l_id);
 
-	GameObjectID CreateGameObject(bool l_drawable = false, bool l_controllable = false, const std::string& l_texture = false);
+	GameObjectID CreateGameObject(std::string l_name, bool l_drawable = false, bool l_controllable = false, const std::string& l_texture = false);
 	void UpdateGameObject(GameObjectID l_id, sf::Vector2f l_position);
 	void UpdateGameObject(GameObjectID l_id, sf::Vector2f l_position, int l_tick);
 	void RemoveGameObject(GameObjectID l_id);

@@ -16,7 +16,7 @@
 #define SERVERIP "127.0.0.1"
 #define SERVERPORT "5555"
 
-#define TIMESTEP 50
+#define TIMESTEP 10
 
 
 
@@ -40,6 +40,7 @@ public:
 	bool WriteTCP(ClientID l_client);
 
 	void QueueTCPMessage(NetMessage l_message, ClientID l_client);
+	void NotifyDisconnection(ClientID l_client);
 
 private:
 	void StartWinSock();

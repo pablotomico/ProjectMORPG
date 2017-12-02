@@ -55,10 +55,37 @@ void Control::Notify(Message l_message) {
 				Message message(MessageType::M_CastSpell, System::S_Network);
 				SpellData spell;
 				spell.m_spellID = 1;
+				spell.m_duration = 1.0f;
+				message.m_spellData = spell;
+
+
+				Send(message);
+			} else if (l_message.m_keyCode == sf::Keyboard::Num2) {
+				Message message(MessageType::M_CastSpell, System::S_Network);
+				SpellData spell;
+				spell.m_spellID = 2;
+				spell.m_duration = 2.0f;
+				message.m_spellData = spell;
+
+
+				Send(message);
+			} else if (l_message.m_keyCode == sf::Keyboard::Num3) {
+				Message message(MessageType::M_CastSpell, System::S_Network);
+				SpellData spell;
+				spell.m_spellID = 3;
 				spell.m_duration = 3.0f;
 				message.m_spellData = spell;
 
-				
+
+				Send(message);
+			} else if (l_message.m_keyCode == sf::Keyboard::C) {
+				Message message(MessageType::M_CastSpell, System::S_Network);
+				SpellData spell;
+				spell.m_spellID = -1;
+				spell.m_duration = 0;
+				message.m_spellData = spell;
+
+
 				Send(message);
 			}
 		}

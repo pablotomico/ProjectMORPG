@@ -1,5 +1,6 @@
 #pragma once
 #include <unordered_map>
+#include <string>
 #include <SFML/System.hpp>
 #include "MessageSystem.hpp"
 #include "Window.hpp"
@@ -16,6 +17,7 @@ class Game {
 
 public:
 	Game();
+	Game(std::string username);
 	~Game();
 
 	void Play();
@@ -49,4 +51,6 @@ private:
 
 	sf::Clock m_networkClock;
 	sf::Time m_networkTime;
+
+	std::string m_username;
 };

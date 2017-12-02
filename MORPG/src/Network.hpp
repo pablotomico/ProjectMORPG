@@ -5,58 +5,17 @@
 #include <WinSock2.h>
 #include <queue>
 #include "Observer.hpp"
+#include "NetMessage.hpp"
 
 #include "NetFramework\include\NetFramework.hpp"
 
 #pragma comment(lib, "ws2_32.lib")
 
-struct NetMessage {
-public:
-	enum Type {
-		SET_CLIENT_ID,
-		INITIAL_DATA,
-		DATA,
-		CAST_SPELL
-	};
-	struct InitialData {
-		int m_clientID;
-		char m_username[16];
-		float x;
-		float y;
-	};
-
-	struct Data {
-		int m_clientID;
-		float x;
-		float y;
-	};
-	struct ServerData {
-		int m_clientID;
-		float m_serverTimestep;
-	};
-
-	struct SpellData {
-		int m_clientID;
-		int m_spellID;
-		float m_duration;
-		int m_endTick;
-	};
-
-public:
-	Type m_type;
-	int m_tick;
-	union {
-		ServerData m_serverData;
-		InitialData m_initialData;
-		Data m_data;
-		SpellData m_spellData;
-	};
-};
-
 
 class Network : public Observer {
 public:
 	Network(MessageSystem* l_messageSystem);
+	Network(MessageSystem* l_messageSystem, std::string l_username);
 	~Network();
 
 	void Update();
@@ -70,7 +29,13 @@ protected:
 
 private:
 	void StartWinSock();
+
+	void ReadTCP();
+	void ReadUDP();
+	void WriteTCP();
+	void WriteUDP();
 	
+	void ProcessMessage(const NetMessage* l_message);
 
 public:
 	float m_serverTimestep;
@@ -85,4 +50,12 @@ private:
 	net::Address m_serverAddress;
 	std::queue<NetMessage> m_udpWriteQueue;
 	std::queue<NetMessage> m_tcpWriteQueue;
+
+	char m_tcpReadBuffer[sizeof NetMessage];
+	char m_tcpWriteBuffer[sizeof NetMessage];
+
+	std::string m_username;
+
+	int m_tcpReadCount;
+	int m_tcpWriteCount;
 };

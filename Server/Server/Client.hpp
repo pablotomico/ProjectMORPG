@@ -17,6 +17,7 @@ public:
 	ClientID m_id;
 	SOCKET m_tcpSocket;
 	sockaddr_in m_address;
+	std::string m_username;
 
 	std::queue<NetMessage> m_tcpMsgQueue;
 	char m_tcpWriteBuffer[sizeof NetMessage];

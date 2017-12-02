@@ -9,9 +9,17 @@ void NetworkControl::RegisterClient(int l_clientID) {
 	msg.m_gameObjectCreated.m_timestep = m_timestep;
 	Send(msg);
 }
+void NetworkControl::RegisterClient(int l_clientID, const std::string& l_username) {
+	m_clientGameObjectMap[l_clientID] = -1;
+	Message msg(MessageType::M_GameObjectCreated, System::S_GameObjectManager);
+	msg.m_gameObjectCreated.m_gameObjectIDs.first = l_clientID;
+	msg.m_gameObjectCreated.m_timestep = m_timestep;
+	memcpy(msg.m_gameObjectCreated.m_name, l_username.c_str(), l_username.size());
+	Send(msg);
+}
 
 void NetworkControl::AddClientGameObject(int l_clientID, GameObjectID l_gameObjectID) {
-	printf("Adding Client GameObject %d-%d\n", l_clientID, l_gameObjectID);
+	//printf("Adding Client GameObject %d-%d\n", l_clientID, l_gameObjectID);
 	m_clientGameObjectMap[l_clientID] = l_gameObjectID;
 }
 
@@ -23,7 +31,17 @@ void NetworkControl::UpdateClient(int l_clientID, float l_x, float l_y, int l_ti
 }
 
 
-void NetworkControl::RemoveClient(int l_clientID) {}
+void NetworkControl::RemoveClient(int l_clientID) {
+	if (!HasClient(l_clientID)) {
+		return;
+	}
+
+	Message msg(MessageType::M_GameObjectDeleted, System::S_GameObjectManager);
+	msg.m_integer = m_clientGameObjectMap[l_clientID];
+	Send(msg);
+
+	m_clientGameObjectMap.erase(l_clientID);
+}
 
 bool NetworkControl::HasClient(int l_clientID) {
 	return (m_clientGameObjectMap.find(l_clientID) != m_clientGameObjectMap.end());
@@ -34,9 +52,11 @@ void NetworkControl::Notify(Message l_message) {
 	case MessageType::M_Player:
 		//printf("\t\tSERVER: [%d] -> (%f, %f)\n", l_message.m_gameObject.m_gameObjectID, l_message.m_gameObject.m_position.x, l_message.m_gameObject.m_position.y);
 		if (!HasClient(l_message.m_gameObject.m_gameObjectID)) {
-			printf("Registering Client %d\n", l_message.m_gameObject.m_gameObjectID);
-			RegisterClient(l_message.m_gameObject.m_gameObjectID);
-		} else if (m_clientGameObjectMap[l_message.m_gameObject.m_gameObjectID] != -1) {
+			//printf("Registering Client %d\n", l_message.m_gameObject.m_gameObjectID);
+			//RegisterClient(l_message.m_gameObject.m_gameObjectID);
+		}
+
+		if (HasClient(l_message.m_gameObject.m_gameObjectID) && m_clientGameObjectMap[l_message.m_gameObject.m_gameObjectID] != -1) {
 			UpdateClient(l_message.m_gameObject.m_gameObjectID, l_message.m_gameObject.m_position.x, l_message.m_gameObject.m_position.y, l_message.m_gameObject.m_tick);
 		}
 
@@ -44,15 +64,28 @@ void NetworkControl::Notify(Message l_message) {
 	case MessageType::M_GameObjectCreated:
 		AddClientGameObject(l_message.m_gameObjectCreated.m_gameObjectIDs.first, l_message.m_gameObjectCreated.m_gameObjectIDs.second);
 		break;
+	case MessageType::M_GameObjectDeleted:
+		RemoveClient(l_message.m_integer);
+		break;
 	case MessageType::M_SetServerTimestep:
 		m_timestep = l_message.m_float;
 		break;
 	case MessageType::M_CastSpell:
-		l_message.m_systemReceiver = System::S_GameObjectManager;
-		GameObjectID id = m_clientGameObjectMap[l_message.m_gameObjectSpellData.first];
-		l_message.m_gameObjectSpellData.first = id;
+		{
+			l_message.m_systemReceiver = System::S_GameObjectManager;
+			GameObjectID id = m_clientGameObjectMap[l_message.m_gameObjectSpellData.first];
+			l_message.m_gameObjectSpellData.first = id;
 
-		Send(l_message);
+			Send(l_message);
+		}
+		break;
+	case MessageType::M_PlayerConnected:
+		{
+			if (!HasClient(l_message.m_playerData.m_id)) {
+				//printf("Registering Client %d\n", l_message.m_gameObject.m_gameObjectID);
+				RegisterClient(l_message.m_playerData.m_id, std::string(l_message.m_playerData.m_username));
+			}
+		}
 		break;
 	}
 }

@@ -1,9 +1,10 @@
 #include "GameObject.hpp"
 #include "Utilities.hpp"
 
-GameObject::GameObject(GameObjectID l_gameObjectID, bool l_isDrawable, bool l_isControllable, TextureManager* l_textureManager)
-	: m_id(l_gameObjectID), m_isDrawable(l_isDrawable), m_isControllable(l_isControllable), m_position(sf::Vector2f(0, 0)) {
+GameObject::GameObject(GameObjectID l_gameObjectID, std::string l_name, bool l_isDrawable, bool l_isControllable, TextureManager* l_textureManager)
+	: m_id(l_gameObjectID), m_isDrawable(l_isDrawable), m_isControllable(l_isControllable), m_position(sf::Vector2f(0, 0)), m_spriteOffset(sf::Vector2f(0, 50)) , m_name(l_name){
 	m_textureManager = l_textureManager;
+	m_nameText.setString(l_name);
 	OnCreate();
 }
 
@@ -13,7 +14,7 @@ GameObject::~GameObject() {
 
 void GameObject::Update(int l_tick, float l_deltaTime) {
 
-	if (m_castingSpell && m_spellCast.first == l_tick) {
+	if (m_castingSpell && m_spellCast.first <= l_tick) {
 		ThrowSpell();
 	}
 
@@ -21,10 +22,15 @@ void GameObject::Update(int l_tick, float l_deltaTime) {
 		PredictPosition(l_tick, l_deltaTime);
 	}
 
-
+	if (IsDrawable()) {
+		m_sprite.setPosition(m_position + m_spriteOffset);
+		m_nameText.setPosition(m_position);
+	}
+	
 	//printf("SIZE: %d\n", m_gameObjects.size());
 	
 }
+
 
 GameObjectID GameObject::GetGameObjectID() {
 	return m_id;
@@ -42,10 +48,14 @@ sf::Sprite& GameObject::GetSprite() {
 	return m_sprite;
 }
 
+sf::Text & GameObject::GetNameText() {
+	return m_nameText;
+}
+
 void GameObject::SetPosition(const sf::Vector2f & l_position, int l_tick) {
 	if (l_tick > -1) {
 		int deltaTick = l_tick - m_netPosition.first;
-		if (deltaTick == 0) {
+		if (deltaTick <= 0) {
 			return;
 		}
 		m_velocity.x = (l_position.x - m_netPosition.second.x) / (deltaTick * m_timestep);
@@ -61,6 +71,7 @@ void GameObject::SetSprite(const std::string& l_texture) {
 	if (m_textureManager->RequireTexture(l_texture)) {
 		sf::Texture* texture = m_textureManager->GetTexture(l_texture);
 		m_sprite.setTexture(*texture);
+		
 	} else {
 		printf("Texture not found - %s%s\n", Utils::GetWorkingDirectory().c_str(), l_texture.c_str());
 	}
@@ -71,6 +82,10 @@ void GameObject::SetSpriteScale(const float l_x, const float l_y) {
 }
 
 void GameObject::CastSpell(int l_endTick, int l_spellID) {
+	if (l_spellID < 0) {
+		m_castingSpell = false;
+		return;
+	}
 	if (m_castingSpell) {
 		printf("Already casting a spell!\n");
 		return;

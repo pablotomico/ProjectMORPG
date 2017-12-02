@@ -8,6 +8,7 @@ public:
 
 private:
 	void RegisterClient(int l_clientID);
+	void RegisterClient(int l_clientID, const std::string& l_username);
 	void AddClientGameObject(int l_clientID, GameObjectID l_gameObjectID);
 	void UpdateClient(int l_clientID, float l_x, float l_y, int l_tick);
 	void RemoveClient(int l_clientID);

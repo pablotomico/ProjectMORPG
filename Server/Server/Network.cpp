@@ -212,6 +212,18 @@ void Network::QueueTCPMessage(NetMessage l_message, ClientID l_client) {
 	}
 }
 
+void Network::NotifyDisconnection(ClientID l_client) {
+	NetMessage connectionMessage;
+	connectionMessage.m_type = NetMessage::Type::PLAYER_DISCONNECTED;
+	connectionMessage.m_playerData.m_clientID = l_client;
+
+	for (auto& itr = m_clients.begin(); itr != m_clients.end(); ++itr) {
+		if (itr->first != connectionMessage.m_playerData.m_clientID) {
+			QueueTCPMessage(connectionMessage, itr->first);
+		}
+	}
+}
+
 
 void Network::StartWinSock() {
 	WSADATA w;
@@ -241,14 +253,36 @@ void Network::ProcessMessage(const NetMessage* l_message) {
 		break;
 	case NetMessage::Type::INITIAL_DATA:
 		{
-			NetMessage message;
-			message.m_type = NetMessage::Type::DATA;
-			message.m_data.m_clientID = l_message->m_initialData.m_clientID;
-			message.m_data.x = l_message->m_initialData.x;
-			message.m_data.y = l_message->m_initialData.y;
-			message.m_tick = l_message->m_tick;
+			Client* client = m_clients[l_message->m_initialData.m_clientID];
+			client->m_username = std::string(l_message->m_initialData.m_username);
 
-			m_udpMsgQueue.push(message);
+			NetMessage dataMessage;
+			dataMessage.m_type = NetMessage::Type::DATA;
+			dataMessage.m_data.m_clientID = l_message->m_initialData.m_clientID;
+			dataMessage.m_data.x = l_message->m_initialData.x;
+			dataMessage.m_data.y = l_message->m_initialData.y;
+			dataMessage.m_tick = l_message->m_tick;
+
+			m_udpMsgQueue.push(dataMessage);
+
+			NetMessage connectionMessage;
+			connectionMessage.m_type = NetMessage::Type::PLAYER_CONNECTED;
+			connectionMessage.m_playerData.m_clientID = l_message->m_initialData.m_clientID;
+			memcpy(connectionMessage.m_playerData.m_username, l_message->m_initialData.m_username, sizeof NetMessage::PlayerData::m_username);
+
+			for (auto& itr = m_clients.begin(); itr != m_clients.end(); ++itr) {
+				if (itr->first != connectionMessage.m_playerData.m_clientID) {
+					NetMessage playerMsg;
+					playerMsg.m_type = NetMessage::Type::PLAYER_CONNECTED;
+					playerMsg.m_playerData.m_clientID = itr->first;
+					memset(playerMsg.m_playerData.m_username, '\0', sizeof NetMessage::PlayerData::m_username);
+					memcpy(playerMsg.m_playerData.m_username, itr->second->m_username.c_str(), itr->second->m_username.size());
+					QueueTCPMessage(playerMsg, l_message->m_initialData.m_clientID);
+
+					QueueTCPMessage(connectionMessage, itr->first);
+				}
+			}
+
 			if (WSAAsyncSelect(m_serverUDPSocket, m_window, WM_SOCKET, FD_READ | FD_WRITE) == SOCKET_ERROR) {
 				std::cerr << "WSAAsyncSelect failed\n";
 			}
