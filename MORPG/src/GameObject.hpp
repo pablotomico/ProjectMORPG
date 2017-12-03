@@ -57,6 +57,7 @@ private:
 
 	sf::Vector2f m_position;
 	std::pair<int, sf::Vector2f> m_netPosition;
+	float m_netDeltaTime;
 	sf::Vector2f m_velocity;
 	sf::Sprite m_sprite;
 	sf::Text m_nameText;

@@ -34,7 +34,11 @@ Network::Network(MessageSystem * l_messageSystem, std::string l_username) : Obse
 	m_tcpSocket->SetBlocking(false);
 	m_udpSocket->SetBlocking(false);
 
-	m_tcpSocket->Connect(m_serverAddress);
+	if (m_tcpSocket->Connect(m_serverAddress) != SOCKET_ERROR) {
+		std::cout << "Connected to server!" << std::endl;
+		m_connected = true;
+	}
+
 
 	std::cout << "Network system initialized!" << std::endl;
 }
@@ -44,7 +48,17 @@ Network::~Network() {
 	delete m_tcpSocket;
 }
 
-void Network::Update() {}
+void Network::Update() {
+	NetMessage message;
+	message.m_type = NetMessage::Type::DATA;
+	message.m_data.m_clientID = m_client;
+	sf::Vector2f position = m_controlledGameObject->GetPosition();
+	message.m_data.x = position.x;
+	message.m_data.y = position.y;
+	message.m_tick = m_tick;
+
+	m_udpWriteQueue.push(message);
+}
 
 void Network::ReadNetwork() {
 	ReadTCP();
@@ -60,8 +74,8 @@ void Network::WriteNetwork() {
 	WriteTCP();
 }
 
-void Network::SetControlledGameObject(GameObjectID l_id) {
-	m_controlledGameObject = l_id;
+void Network::SetControlledGameObject(GameObject* l_gameObject) {
+	m_controlledGameObject = l_gameObject;
 }
 
 void Network::Notify(Message l_message) {
@@ -131,10 +145,8 @@ void Network::ReadUDP() {
 		int i = sizeof addr.m_address;
 		aux = m_udpSocket->Receive(&msg, sizeof NetMessage, addr, &i);
 		if (aux == SOCKET_ERROR) {
-			if (WSAGetLastError() == WSAEWOULDBLOCK) {
-				break;
-			}
-			std::cerr << "Error receiving!\n";
+			
+			break;
 		}
 		//printf("\nReceived UDP Message - Type %d - %d bytes ", (int) msg.m_type, aux);
 		//printf("from: %s:%d\n", inet_ntoa(addr.m_address.sin_addr), ntohs(addr.m_address.sin_port));
@@ -205,7 +217,7 @@ void Network::ProcessMessage(const NetMessage* l_message) {
 
 			msg.m_type = MessageType::M_GameObjectCreated;
 			msg.m_gameObjectCreated.m_gameObjectIDs.first = m_client;
-			msg.m_gameObjectCreated.m_gameObjectIDs.second = m_controlledGameObject;
+			msg.m_gameObjectCreated.m_gameObjectIDs.second = m_controlledGameObject->GetGameObjectID();
 			Send(msg);
 
 			NetMessage netmsg;

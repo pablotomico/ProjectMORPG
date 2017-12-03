@@ -22,7 +22,7 @@ public:
 	void ReadNetwork();
 	void WriteNetwork();
 
-	void SetControlledGameObject(GameObjectID l_id);
+	void SetControlledGameObject(GameObject* l_gameObject);
 
 protected:
 	void Notify(Message l_message);
@@ -43,7 +43,9 @@ public:
 
 private:
 	int m_client;
-	GameObjectID m_controlledGameObject;
+	GameObject* m_controlledGameObject;
+
+	bool m_connected;
 	
 	net::UDPSocket* m_udpSocket;
 	net::TCPSocket* m_tcpSocket;

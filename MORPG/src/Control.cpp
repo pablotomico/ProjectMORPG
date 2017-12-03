@@ -23,8 +23,8 @@ void Control::Update(float l_deltaTime) {
 		//printf("Movement (%f, %f)\n", m_movement.x, m_movement.y);
 		gameObject->Move(m_movement * l_deltaTime);
 	}
-	Message message(MessageType::M_GameObject, System::S_Network, gameObject->GetGameObjectID(), gameObject->GetPosition());
-	Send(message);
+	//Message message(MessageType::M_GameObject, System::S_Network, gameObject->GetGameObjectID(), gameObject->GetPosition());
+	//Send(message);
 }
 
 void Control::Notify(Message l_message) {

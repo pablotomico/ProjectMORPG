@@ -48,29 +48,28 @@ void Game::Init() {
 
 
 	m_controlSystem.SetControlledGameObject(id);
-	m_networkSystem.SetControlledGameObject(id);
+	m_networkSystem.SetControlledGameObject(gameobject);
 }
 
 void Game::Update() {
-	float deltaTime = m_elapsed.asSeconds() * 1000;
-	bool writeNetwork = false;
+	float deltaTime = m_elapsed.asMilliseconds();
+
+	m_networkSystem.ReadNetwork();
+
+	m_window.Update(deltaTime);
+	m_messageSystem.DispatchMessages();
+	m_controlSystem.Update(deltaTime);
+
+
+	m_gameObjectManager.Update(m_networkSystem.m_tick, m_networkTime.asMilliseconds());
 	if (m_networkTime.asMilliseconds() > m_networkSystem.m_serverTimestep) {
 		int deltaTick = floor(m_networkTime.asMilliseconds() / m_networkSystem.m_serverTimestep);
 		m_networkSystem.m_tick += deltaTick;
 		//printf("TICK: %d\n", m_networkSystem.m_tick);
 		m_networkTime -= sf::milliseconds(m_networkSystem.m_serverTimestep * deltaTick);
-		m_networkSystem.ReadNetwork();
-		writeNetwork = true;
-	}
 
-	m_window.Update(deltaTime);
-	m_messageSystem.DispatchMessages();
-	m_controlSystem.Update(deltaTime);
-	m_networkSystem.Update();
 
-	m_gameObjectManager.Update(m_networkSystem.m_tick, m_networkTime.asMilliseconds());
-
-	if (writeNetwork) {
+		m_networkSystem.Update();
 		m_networkSystem.WriteNetwork();
 	}
 

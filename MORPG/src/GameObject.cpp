@@ -2,7 +2,7 @@
 #include "Utilities.hpp"
 
 GameObject::GameObject(GameObjectID l_gameObjectID, std::string l_name, bool l_isDrawable, bool l_isControllable, TextureManager* l_textureManager)
-	: m_id(l_gameObjectID), m_isDrawable(l_isDrawable), m_isControllable(l_isControllable), m_position(sf::Vector2f(0, 0)), m_spriteOffset(sf::Vector2f(0, 50)) , m_name(l_name){
+	: m_id(l_gameObjectID), m_isDrawable(l_isDrawable), m_isControllable(l_isControllable), m_position(sf::Vector2f(0, 0)), m_spriteOffset(sf::Vector2f(0, 50)), m_name(l_name) {
 	m_textureManager = l_textureManager;
 	m_nameText.setString(l_name);
 	OnCreate();
@@ -26,9 +26,9 @@ void GameObject::Update(int l_tick, float l_deltaTime) {
 		m_sprite.setPosition(m_position + m_spriteOffset);
 		m_nameText.setPosition(m_position);
 	}
-	
+
 	//printf("SIZE: %d\n", m_gameObjects.size());
-	
+
 }
 
 
@@ -55,11 +55,13 @@ sf::Text & GameObject::GetNameText() {
 void GameObject::SetPosition(const sf::Vector2f & l_position, int l_tick) {
 	if (l_tick > -1) {
 		int deltaTick = l_tick - m_netPosition.first;
+		m_netDeltaTime = 0;
 		if (deltaTick <= 0) {
 			return;
 		}
 		m_velocity.x = (l_position.x - m_netPosition.second.x) / (deltaTick * m_timestep);
 		m_velocity.y = (l_position.y - m_netPosition.second.y) / (deltaTick * m_timestep);
+
 		m_netPosition = std::pair<int, sf::Vector2f>(l_tick, l_position);
 	} else {
 
@@ -71,7 +73,7 @@ void GameObject::SetSprite(const std::string& l_texture) {
 	if (m_textureManager->RequireTexture(l_texture)) {
 		sf::Texture* texture = m_textureManager->GetTexture(l_texture);
 		m_sprite.setTexture(*texture);
-		
+
 	} else {
 		printf("Texture not found - %s%s\n", Utils::GetWorkingDirectory().c_str(), l_texture.c_str());
 	}
@@ -105,9 +107,10 @@ void GameObject::ThrowSpell() {
 
 void GameObject::PredictPosition(int l_tick, float l_deltaTime) {
 	int deltaTick = l_tick - m_netPosition.first;
-	m_position.x = m_netPosition.second.x + m_velocity.x * l_deltaTime;
-	m_position.y = m_netPosition.second.y + m_velocity.y * l_deltaTime;
-
+	m_netDeltaTime += l_deltaTime;
+	m_position.x = m_netPosition.second.x + m_velocity.x * (l_deltaTime + m_timestep * deltaTick);
+	m_position.y = m_netPosition.second.y + m_velocity.y * (l_deltaTime + m_timestep * deltaTick);
+	//printf("Velocity = (%f, %f) l_deltaTime = %f, m_timestep = %f, deltaTick = %d\n", m_velocity.x, m_velocity.y, l_deltaTime, m_timestep, deltaTick);
 	if (m_velocity.x > 0 || m_velocity.y > 0) {
 
 		/*printf("[%d] PREDICTION:\n", m_id);
