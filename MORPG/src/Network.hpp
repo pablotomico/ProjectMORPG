@@ -5,7 +5,7 @@
 #include <WinSock2.h>
 #include <queue>
 #include "Observer.hpp"
-#include "NetMessage.hpp"
+#include "NetFramework\include\NetMessage.hpp"
 
 #include "NetFramework\include\NetFramework.hpp"
 

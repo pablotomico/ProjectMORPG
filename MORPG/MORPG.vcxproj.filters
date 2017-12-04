@@ -137,7 +137,7 @@
     <ClInclude Include="src\Spell.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\NetMessage.hpp">
+    <ClInclude Include="src\NetFramework\include\NetMessage.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
