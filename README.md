@@ -18,7 +18,7 @@ As for the way that communication flows between the systems, there are two main 
 
 This type of network message represents any piece of information that needs to be processed for every client. Therefore, these messages are sent using the **TCP** connection that each game instance has with the server.
 
-<img class="game-screenshot" src="/figures/figure_1.png" alt="Figure 1" />
+![Figure 1](/figures/figure_1.png)
 
 Some examples of this kind of message are the initial conversation between client and server, where all the connection related parameters are set (client identification number, user name, etc.), and also some mechanics such as spell casting. 
 
@@ -34,7 +34,7 @@ As the name suggests, updates are messages that become useless when a newest ver
 
 In terms of integrating the networking code with the rest of the application, I will first describe the structure of the network system in both the server and the game client.
 
-<img class="game-screenshot" src="/figures/figure_2.png" alt="Figure 2" />
+![Figure 2](/figures/figure_2.png)
 
 ### Structure 
 
@@ -42,7 +42,7 @@ For the server-side networking code, I built a **Network** and a **Client** clas
 
 In the same way, the game client also has a **Network system**, but it does not interact directly with the Windows Socket API. Instead, I implemented a small **NetFramework** that separates the game application from the WinSock, with the idea of modularity and portability in mind. This framework includes some basic socket classes, both TCP and UDP, as well as an address class and the definition of the *NetMessage* struct.
 
-<img class="game-screenshot" src="/figures/figure_3.png" alt="Figure 3" />
+![Figure 3](/figures/figure_3.png)
 
 ### Integration
 
@@ -59,7 +59,7 @@ In this section I will cover the mechanisms used for making the experience smoot
 
 Since the server dictates the pace of the updates with a fixed timestep, the clients only receive others’ positions in each tick, and in the time in-between the game application the game is being updated more than once. Therefore, if there isn’t any prediction technique, external clients would be moving in jumps each tick. Given the nature of the game, movement is not an essential part of the gameplay, so a linear model approach for predicting positions is suitable and gives a good sense of smooth movement.
 
-<img class="game-screenshot" src="/figures/figure_4.png" alt="Figure 4" />
+![Figure 4](/figures/figure_4.png)
 
 Looking at the diagram we can see that, since the game events are paired with the tick when they happen, we are able to calculate players’ future positions by using the last position received from outside, their velocity at that moment and the time passed since the last update. Consequently, the formula for calculating the player position looks like:
 
@@ -73,7 +73,7 @@ In terms of lag compensation techniques, the main decision in the project was to
 
 One practical example implemented in this project that benefits from this feature is, as I mentioned earlier, the spell casting.
 
-<img class="game-screenshot" src="/figures/figure_5.png" alt="Figure 5" />
+![Figure 5](/figures/figure_5.png)
 
 Just like the diagram shows, when a client begins to cast a spell, the server calculates the ending tick using the starting point and the spell data. Once it has that parameter, the server notifies each client of the incoming spell, providing the finishing tick. With this approach, the only part of the communication which can be negatively affected are the other clients, due to the fact that from their point of view, the casting takes a bit less. However, in the context of these game mechanics, casting a spell may take seconds, and therefore the difference between the perceived casting time and the real duration does not affect the overall experience. Moreover, in the case that the player that witnesses the casting from outside has a poor network connection, the idea of having missed part of the casting due to lag does not seem incoherent, as it is expected that the player’s connection is the responsible for that.
 
