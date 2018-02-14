@@ -107,4 +107,4 @@ For the closing section for the document, I would like to describe some changes 
 
 # Read More
 
-If you want to have a look at the code or perhaps read the final report, you can do so using the links down below. Also, for more info don't hesitate to <a href="/about.html">contact</a> me.
+If you want more information about the project, you can visit my [website](https://pablotomico.github.io) and download the full report, or just [contact](https://pablotomico.github.io/about.html) me.
