@@ -1,5 +1,5 @@
 #include "TextureManager.hpp"
-#include "Utilities.hpp"
+#include "Util/Utilities.hpp"
 
 TextureManager::TextureManager() {}
 

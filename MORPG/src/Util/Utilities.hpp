@@ -1,9 +1,39 @@
 #pragma once
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #define RUNNING_WINDOWS
+#endif
+
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <algorithm>
+
+#ifdef RUNNING_WINDOWS
+void PauseApplication() noexcept { system("pause"); }
+#else
+void PauseApplication() noexcept { system("read"); }
+#endif
+
+
+#if _DEBUG
+
+#define LOG(x) do { std::cout << x << std::endl; } while (0)
+#define LOGX(x) do { std::cout << #x << ": " << x << std::endl; } while (0)
+
+#define DEBUG(x) do { std::cerr << x << std::endl; } while (0)
+#define DEBUGX(x) do { std::cerr << #x << ": " << x << std::endl; } while (0)
+
+#else
+
+#define LOG(x)
+#define LOGX(x)
+
+#define DEBUG(x)
+#define DEBUGX(x)
+
+#endif
+
 
 namespace Utils {
 #ifdef RUNNING_WINDOWS
@@ -34,6 +64,4 @@ namespace Utils {
 		return "";
 	}
 #endif
-
-
 }

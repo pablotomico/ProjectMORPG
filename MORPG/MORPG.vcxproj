@@ -23,7 +23,7 @@
     <ProjectGuid>{51759339-3470-4C45-9862-BC4CF07D9489}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>MORPG</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -204,7 +204,7 @@
     <ClInclude Include="src\Spell.hpp" />
     <ClInclude Include="src\Systems.hpp" />
     <ClInclude Include="src\TextureManager.hpp" />
-    <ClInclude Include="src\Utilities.hpp" />
+    <ClInclude Include="src\Util\Utilities.hpp" />
     <ClInclude Include="src\Window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
