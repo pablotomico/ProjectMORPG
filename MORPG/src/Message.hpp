@@ -31,7 +31,7 @@ struct GameObjectMessage {
 		: m_gameObjectID(l_id), m_position(l_position), m_tick(l_tick) {}
 
 	void Print() {
-		printf("[%d] (%f, %f)\n", m_gameObjectID, m_position.x, m_position.y);
+		//LOG("[" << m_gameObjectID << "] (" << m_position.x << ", " << m_position.y << ")");
 	}
 
 	GameObjectID m_gameObjectID;

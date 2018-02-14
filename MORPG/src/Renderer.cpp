@@ -1,10 +1,11 @@
 #include "Renderer.hpp"
+#include "Util\Utilities.hpp"
 
 Renderer::Renderer(MessageSystem * l_messageSystem, GameObjectContainer * l_gameObjects, Window* l_window) : Observer(System::S_Render, l_messageSystem) {
 	m_gameObjects = l_gameObjects;
 	m_window = l_window;
 	if (!m_font.loadFromFile("arial.ttf")) {
-		printf("Error loading font\n");
+		DEBUG("Error loading font");
 	}
 }
 

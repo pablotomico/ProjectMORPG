@@ -3,6 +3,7 @@
 #include <functional>
 
 #include "Message.hpp"
+//#include "Util\Utilities.hpp"
 
 class MessageSystem;
 
@@ -22,7 +23,7 @@ protected:
 	void Send(Message l_message);
 
 	virtual void Notify(Message message) {
-		std::cout << "Notify function not implemented" << std::endl;
+		//LOG("Notify function not implemented");
 	}
 
 protected:

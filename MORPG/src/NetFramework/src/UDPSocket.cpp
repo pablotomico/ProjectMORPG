@@ -1,9 +1,10 @@
 #include "../include/UDPSocket.hpp"
+#include "../../Util/Utilities.hpp"
 
 net::UDPSocket::UDPSocket() {
 	m_socket = socket(AF_INET, SOCK_DGRAM, 0);
 	if (m_socket == INVALID_SOCKET) {
-		std::cerr << "Error creating UDP Socket" << std::endl;
+		DEBUG("Error creating UDP Socket");
 	}
 }
 

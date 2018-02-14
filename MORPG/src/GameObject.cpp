@@ -63,8 +63,8 @@ void GameObject::SetPosition(const sf::Vector2f & l_position, int l_tick) {
 		m_velocity.y = (l_position.y - m_netPosition.second.y) / (deltaTick * m_timestep);
 
 		m_netPosition = std::pair<int, sf::Vector2f>(l_tick, l_position);
-	} else {
-
+	}
+	else {
 		m_position = l_position;
 	}
 }
@@ -73,9 +73,9 @@ void GameObject::SetSprite(const std::string& l_texture) {
 	if (m_textureManager->RequireTexture(l_texture)) {
 		sf::Texture* texture = m_textureManager->GetTexture(l_texture);
 		m_sprite.setTexture(*texture);
-
-	} else {
-		printf("Texture not found - %s%s\n", Utils::GetWorkingDirectory().c_str(), l_texture.c_str());
+	}
+	else {
+		DEBUG("Texture not found - " << Utils::GetWorkingDirectory().c_str() << l_texture.c_str());
 	}
 }
 
@@ -89,7 +89,7 @@ void GameObject::CastSpell(int l_endTick, int l_spellID) {
 		return;
 	}
 	if (m_castingSpell) {
-		printf("Already casting a spell!\n");
+		LOG("Already casting a spell!");
 		return;
 	}
 	m_castingSpell = true;
@@ -101,7 +101,7 @@ void GameObject::CastSpell(int l_endTick, int l_spellID) {
 void GameObject::ThrowSpell() {
 	m_castingSpell = false;
 
-	printf("Spell %d finished!\n", m_spellCast.second);
+	LOG("Spell " << m_spellCast.second << " finished!");
 }
 
 

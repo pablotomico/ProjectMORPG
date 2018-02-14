@@ -1,4 +1,7 @@
+#include <functional>
+
 #include "MessageSystem.hpp"
+
 
 MessageSystem::MessageSystem() {}
 

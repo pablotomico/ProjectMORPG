@@ -9,8 +9,6 @@
 
 #include "NetFramework\include\NetFramework.hpp"
 
-#pragma comment(lib, "ws2_32.lib")
-
 
 class Network : public Observer {
 public:
