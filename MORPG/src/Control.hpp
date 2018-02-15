@@ -6,7 +6,7 @@
 
 class Control : public Observer {
 public:
-	Control(MessageSystem* l_messageSystem, GameObjectContainer* l_gameObjects);
+	Control(const std::shared_ptr<MessageSystem> & l_messageSystem, const std::shared_ptr<GameObjectContainer>& l_gameObjects);
 	~Control();
 
 	void SetControlledGameObject(GameObjectID l_controlledGameObject);
@@ -15,11 +15,11 @@ public:
 	void Update(float l_deltaTime);
 
 protected:
-	void Notify(Message l_message);
+	void Notify(const Message& l_message);
 	void UpdateMovement();
 
 private:
-	GameObjectContainer* m_gameObjects;
+	std::shared_ptr<GameObjectContainer> m_gameObjects;
 	GameObjectID m_controlledGameObject;
 
 	bool m_moving;

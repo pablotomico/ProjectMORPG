@@ -2,7 +2,13 @@
 #include "Message.hpp"
 #include "Util\Utilities.hpp"
 
-Network::Network(MessageSystem * l_messageSystem) : Observer(System::S_Network, l_messageSystem), m_serverAddress(SERVERIP, SERVERPORT), m_client(-1), m_serverTimestep(100), m_username(std::string("Unknown")) {
+Network::Network(const std::shared_ptr<MessageSystem>& l_messageSystem)
+	: Observer(System::S_Network, l_messageSystem)
+	, m_serverAddress(SERVERIP, SERVERPORT)
+	, m_client(-1)
+	, m_serverTimestep(100)
+	, m_username(std::string("Unknown")) {
+
 	StartWinSock();
 
 	m_tcpSocket = new net::TCPSocket();
@@ -21,7 +27,13 @@ Network::Network(MessageSystem * l_messageSystem) : Observer(System::S_Network, 
 	LOG("Network system initialized!");
 }
 
-Network::Network(MessageSystem * l_messageSystem, std::string l_username) : Observer(System::S_Network, l_messageSystem), m_serverAddress(SERVERIP, SERVERPORT), m_client(-1), m_serverTimestep(100), m_username(l_username) {
+Network::Network(const std::shared_ptr<MessageSystem>& l_messageSystem, std::string l_username)
+	: Observer(System::S_Network, l_messageSystem)
+	, m_serverAddress(SERVERIP, SERVERPORT)
+	, m_client(-1)
+	, m_serverTimestep(100)
+	, m_username(l_username) {
+
 	StartWinSock();
 
 	m_tcpSocket = new net::TCPSocket();
@@ -79,7 +91,7 @@ void Network::SetControlledGameObject(GameObject* l_gameObject) {
 	m_controlledGameObject = l_gameObject;
 }
 
-void Network::Notify(Message l_message) {
+void Network::Notify(const Message& l_message) {
 	switch (l_message.m_type) {
 	case MessageType::M_GameObject:
 	{

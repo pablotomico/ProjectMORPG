@@ -13,7 +13,7 @@ class Input;
 class Window : public Observer {
 
 public:
-	Window(MessageSystem* l_messageSystem, const std::string& l_title, const sf::Vector2u& l_size, Input* l_inputSystem);
+	Window(const std::shared_ptr<MessageSystem>& l_messageSystem, const std::string& l_title, const sf::Vector2u& l_size, const std::shared_ptr<Input>& l_inputSystem);
 	~Window();
 
 	void BeginDraw(); // Clear the window.
@@ -41,7 +41,7 @@ private:
 	void Destroy();
 
 private:
-	Input* m_inputSystem;
+	std::shared_ptr<Input> m_inputSystem;
 
 	sf::RenderWindow m_window;
 	sf::Vector2u m_windowSize;

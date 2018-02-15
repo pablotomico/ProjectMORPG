@@ -13,7 +13,7 @@ public:
 	void AddObserver(System l_system, Callback l_callback);
 	void RemoveObserver(System l_system);
 
-	void SendMessage(Message l_message);
+	void Send(Message l_message);
 	void DispatchMessages();
 
 private:

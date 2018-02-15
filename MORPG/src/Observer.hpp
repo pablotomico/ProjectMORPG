@@ -1,6 +1,7 @@
 #pragma once
 
 #include <functional>
+#include <memory>
 
 #include "Message.hpp"
 //#include "Util\Utilities.hpp"
@@ -11,7 +12,7 @@ using Callback = std::function<void(Message)>;
 
 class Observer {
 public:
-	Observer(System l_system, MessageSystem* l_messageSystem);
+	Observer(const System& l_system, const std::shared_ptr<MessageSystem>& l_messageSystem);
 
 protected:
 	Callback GetNotify() {
@@ -22,12 +23,11 @@ protected:
 	}
 	void Send(Message l_message);
 
-	virtual void Notify(Message message) {
+	virtual void Notify(const Message& message) {
 		//LOG("Notify function not implemented");
 	}
 
 protected:
 	System m_system;
-	MessageSystem* m_messageSystem;
-
+	std::shared_ptr<MessageSystem> m_messageSystem;
 };

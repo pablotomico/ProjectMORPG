@@ -1,6 +1,7 @@
 #include "NetworkControl.hpp"
 
-NetworkControl::NetworkControl(MessageSystem * l_messageSystem) : Observer(System::S_NetworkControl, l_messageSystem) {}
+NetworkControl::NetworkControl(const std::shared_ptr<MessageSystem>& l_messageSystem)
+	: Observer(System::S_NetworkControl, l_messageSystem) {}
 
 void NetworkControl::RegisterClient(int l_clientID) {
 	m_clientGameObjectMap[l_clientID] = -1;
@@ -47,7 +48,7 @@ bool NetworkControl::HasClient(int l_clientID) {
 	return (m_clientGameObjectMap.find(l_clientID) != m_clientGameObjectMap.end());
 }
 
-void NetworkControl::Notify(Message l_message) {
+void NetworkControl::Notify(const Message& l_message) {
 	switch (l_message.m_type) {
 	case MessageType::M_Player:
 		//printf("\t\tSERVER: [%d] -> (%f, %f)\n", l_message.m_gameObject.m_gameObjectID, l_message.m_gameObject.m_position.x, l_message.m_gameObject.m_position.y);
@@ -71,21 +72,22 @@ void NetworkControl::Notify(Message l_message) {
 		m_timestep = l_message.m_float;
 		break;
 	case MessageType::M_CastSpell:
-		{
-			l_message.m_systemReceiver = System::S_GameObjectManager;
-			GameObjectID id = m_clientGameObjectMap[l_message.m_gameObjectSpellData.first];
-			l_message.m_gameObjectSpellData.first = id;
+	{
+		Message message(l_message);
+		message.m_systemReceiver = System::S_GameObjectManager;
+		GameObjectID id = m_clientGameObjectMap[message.m_gameObjectSpellData.first];
+		message.m_gameObjectSpellData.first = id;
 
-			Send(l_message);
-		}
-		break;
+		Send(message);
+	}
+	break;
 	case MessageType::M_PlayerConnected:
-		{
-			if (!HasClient(l_message.m_playerData.m_id)) {
-				//printf("Registering Client %d\n", l_message.m_gameObject.m_gameObjectID);
-				RegisterClient(l_message.m_playerData.m_id, std::string(l_message.m_playerData.m_username));
-			}
+	{
+		if (!HasClient(l_message.m_playerData.m_id)) {
+			//printf("Registering Client %d\n", l_message.m_gameObject.m_gameObjectID);
+			RegisterClient(l_message.m_playerData.m_id, std::string(l_message.m_playerData.m_username));
 		}
-		break;
+	}
+	break;
 	}
 }

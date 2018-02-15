@@ -1,7 +1,7 @@
 #include "GameObject.hpp"
 #include "Util/Utilities.hpp"
 
-GameObject::GameObject(GameObjectID l_gameObjectID, std::string l_name, bool l_isDrawable, bool l_isControllable, TextureManager* l_textureManager)
+GameObject::GameObject(GameObjectID l_gameObjectID, std::string l_name, bool l_isDrawable, bool l_isControllable, const std::shared_ptr<TextureManager>& l_textureManager)
 	: m_id(l_gameObjectID), m_isDrawable(l_isDrawable), m_isControllable(l_isControllable), m_position(sf::Vector2f(0, 0)), m_spriteOffset(sf::Vector2f(0, 50)), m_name(l_name) {
 	m_textureManager = l_textureManager;
 	m_nameText.setString(l_name);

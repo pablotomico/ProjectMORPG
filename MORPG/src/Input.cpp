@@ -1,20 +1,21 @@
 #include "Input.hpp"
 #include "MessageSystem.hpp"
+#include "Util\Utilities.hpp"
 
-Input::Input(MessageSystem* l_messageSystem) : Observer(System::S_Input, l_messageSystem) {}
+Input::Input(const std::shared_ptr<MessageSystem>& l_messageSystem) : Observer(System::S_Input, l_messageSystem) {}
 
 Input::~Input() {}
 
-void Input::Notify(Message message) {}
+void Input::Notify(const Message& message) {}
 
-void Input::Update(float l_deltaTime) {}
+void Input::Update(const float& l_deltaTime) {}
 
-void Input::HandleEvent(sf::Event l_event) {
+void Input::HandleEvent(const sf::Event& l_event) {
 	switch (l_event.type) {
 	case sf::Event::KeyPressed:
 		{
 			KeyCode code = l_event.key.code;
-			//printf("[%d] ", code);
+			//LOG("KEY: " << code);
 
 			// Send message in multicast mode
 			if (m_keysDown[code]) {

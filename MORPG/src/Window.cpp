@@ -4,9 +4,9 @@
 #include "MessageSystem.hpp"
 #include "Input.hpp"
 
-Window::Window(MessageSystem* l_messageSystem, const std::string& l_title, const sf::Vector2u& l_size, Input* l_inputSystem)
-	: Observer(System::S_Window, l_messageSystem) {
-	m_inputSystem = l_inputSystem;
+Window::Window(const std::shared_ptr<MessageSystem>& l_messageSystem, const std::string& l_title, const sf::Vector2u& l_size, const std::shared_ptr<Input>& l_inputSystem)
+	: Observer(System::S_Window, l_messageSystem)
+	, m_inputSystem(l_inputSystem) {
 	Setup(l_title, l_size);
 }
 
@@ -27,9 +27,11 @@ void Window::Update(float l_deltaTime) {
 	while (m_window.pollEvent(event)) {
 		if (event.type == sf::Event::Closed) {
 			Close();
-		} else if (event.type == sf::Event::LostFocus) {
+		}
+		else if (event.type == sf::Event::LostFocus) {
 			m_isFocused = false;
-		} else if (event.type == sf::Event::GainedFocus) {
+		}
+		else if (event.type == sf::Event::GainedFocus) {
 			m_isFocused = true;
 		}
 		m_inputSystem->HandleEvent(event);
@@ -70,7 +72,7 @@ sf::RenderWindow* Window::GetRenderWindow() {
 
 void Window::Notify(Message l_message) {
 	if (l_message.m_type == MessageType::M_KeyPressed) {
-		
+
 		if (l_message.m_keyCode == sf::Keyboard::Escape) {
 			Close();
 		}

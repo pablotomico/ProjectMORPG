@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "Definitions.hpp"
 #include "TextureManager.hpp"
 #include "Spell.hpp"
@@ -10,7 +11,7 @@ using GameObjectID = unsigned int;
 
 class GameObject {
 public:
-	GameObject(GameObjectID l_gameObjectID, std::string l_name, bool l_isDrawable = false, bool l_isControllable = false, TextureManager* l_textureManager = nullptr);
+	GameObject(GameObjectID l_gameObjectID, std::string l_name, bool l_isDrawable = false, bool l_isControllable = false, const std::shared_ptr<TextureManager>& l_textureManager = nullptr);
 	~GameObject();
 
 	virtual void OnCreate() {}
@@ -67,7 +68,7 @@ private:
 	bool m_castingSpell;
 	SpellCast m_spellCast;
 
-	TextureManager* m_textureManager;
+	std::shared_ptr<TextureManager> m_textureManager;
 
 	bool m_isDrawable;
 	bool m_isControllable;

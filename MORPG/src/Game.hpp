@@ -2,6 +2,8 @@
 #include <unordered_map>
 #include <string>
 #include <SFML/System.hpp>
+#include <memory>
+
 #include "MessageSystem.hpp"
 #include "Window.hpp"
 #include "GameObject.hpp"
@@ -17,7 +19,7 @@ class Game {
 
 public:
 	Game();
-	Game(std::string username);
+	Game(const std::string& username);
 	~Game();
 
 	void Play();
@@ -34,16 +36,16 @@ private:
 	void RestartClock();
 
 private:
-	MessageSystem m_messageSystem;
-	GameObjectManager m_gameObjectManager;
-	GameObjectContainer* m_gameObjects;
-	Window m_window;
-	Input m_inputSystem;
-	Control m_controlSystem;
-	Renderer m_renderSystem;
-	TextureManager m_textureManager;
-	Network m_networkSystem;
-	NetworkControl m_networkControlSystem;
+	std::shared_ptr<MessageSystem> m_messageSystem;
+	std::shared_ptr<GameObjectManager> m_gameObjectManager;
+	std::shared_ptr<GameObjectContainer> m_gameObjects;
+	std::shared_ptr<Window> m_window;
+	std::shared_ptr<Input> m_inputSystem;
+	std::shared_ptr<Control> m_controlSystem;
+	std::shared_ptr<Renderer> m_renderSystem;
+	std::shared_ptr<TextureManager> m_textureManager;
+	std::shared_ptr<Network> m_networkSystem;
+	std::shared_ptr<NetworkControl> m_networkControlSystem;
 
 
 	sf::Clock m_clock;

@@ -1,9 +1,10 @@
 #include "Renderer.hpp"
 #include "Util\Utilities.hpp"
 
-Renderer::Renderer(MessageSystem * l_messageSystem, GameObjectContainer * l_gameObjects, Window* l_window) : Observer(System::S_Render, l_messageSystem) {
-	m_gameObjects = l_gameObjects;
-	m_window = l_window;
+Renderer::Renderer(const std::shared_ptr<MessageSystem>& l_messageSystem, const std::shared_ptr<GameObjectContainer>& l_gameObjects, const std::shared_ptr<Window>& l_window)
+	: Observer(System::S_Render, l_messageSystem)
+	, m_gameObjects(l_gameObjects)
+	, m_window(l_window) {
 	if (!m_font.loadFromFile("arial.ttf")) {
 		DEBUG("Error loading font");
 	}
@@ -31,4 +32,4 @@ void Renderer::Render() {
 	}
 }
 
-void Renderer::Notify(Message l_message) {}
+void Renderer::Notify(const Message& l_message) {}

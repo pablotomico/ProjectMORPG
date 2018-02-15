@@ -12,8 +12,8 @@
 
 class Network : public Observer {
 public:
-	Network(MessageSystem* l_messageSystem);
-	Network(MessageSystem* l_messageSystem, std::string l_username);
+	Network(const std::shared_ptr<MessageSystem>& l_messageSystem);
+	Network(const std::shared_ptr<MessageSystem>& l_messageSystem, std::string l_username);
 	~Network();
 
 	void Update();
@@ -23,7 +23,7 @@ public:
 	void SetControlledGameObject(GameObject* l_gameObject);
 
 protected:
-	void Notify(Message l_message);
+	void Notify(const Message& l_message);
 
 private:
 	void StartWinSock();

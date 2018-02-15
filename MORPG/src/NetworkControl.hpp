@@ -4,7 +4,7 @@
 
 class NetworkControl : public Observer {
 public:
-	NetworkControl(MessageSystem* l_messageSystem);
+	NetworkControl(const std::shared_ptr<MessageSystem>& l_messageSystem);
 
 private:
 	void RegisterClient(int l_clientID);
@@ -15,7 +15,7 @@ private:
 
 	bool HasClient(int l_clientID);
 protected:
-	void Notify(Message l_message);
+	void Notify(const Message& l_message);
 
 private:
 	std::unordered_map<int, GameObjectID> m_clientGameObjectMap;
