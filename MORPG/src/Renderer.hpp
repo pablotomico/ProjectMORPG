@@ -1,9 +1,10 @@
 #pragma once
 
-#include "GameObject.hpp"
+#include <SFML/Graphics.hpp>
 #include "Observer.hpp"
 #include "Definitions.hpp"
-#include "Window.hpp"
+
+class Window;
 
 class Renderer : public Observer {
 public:

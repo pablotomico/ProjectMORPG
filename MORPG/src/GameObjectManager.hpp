@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Observer.hpp"
-#include "GameObject.hpp"
+
+class GameObject;
+class TextureManager;
 
 class GameObjectManager : public Observer {
 

@@ -4,7 +4,6 @@
 #include <memory>
 
 #include "Message.hpp"
-//#include "Util\Utilities.hpp"
 
 class MessageSystem;
 
@@ -24,7 +23,7 @@ protected:
 	void Send(const Message& l_message);
 
 	virtual void Notify(const Message& message) {
-		//LOG("Notify function not implemented");
+		
 	}
 
 protected:

@@ -1,9 +1,10 @@
 #pragma once
+
+#include <memory>
 #include <unordered_map>
 #include <SFML/Window.hpp>
-#include <memory>
+
 #include "Observer.hpp"
-#include "GameObject.hpp"
 #include "Definitions.hpp"
 
 class Input : public Observer {

@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Window.hpp>
+#include <unordered_map>
 
 // Window
 #define WINDOW_TITLE "Network MORPG"
@@ -19,4 +20,8 @@
 #define SERVERIP "127.0.0.1"
 #define SERVERPORT 5555
 
+class GameObject;
+
 using KeyCode = sf::Keyboard::Key;
+using GameObjectID = unsigned int;
+using GameObjectContainer = std::unordered_map<GameObjectID, GameObject*>;

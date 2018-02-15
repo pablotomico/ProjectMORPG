@@ -1,19 +1,20 @@
 #pragma once
-#include <unordered_map>
 #include <string>
-#include <SFML/System.hpp>
 #include <memory>
+#include <unordered_map>
+#include <SFML/System.hpp>
 
-#include "MessageSystem.hpp"
-#include "Window.hpp"
-#include "GameObject.hpp"
-#include "Input.hpp"
-#include "Control.hpp"
-#include "Renderer.hpp"
-#include "TextureManager.hpp"
-#include "GameObjectManager.hpp"
-#include "Network.hpp"
-#include "NetworkControl.hpp"
+#include "Definitions.hpp"
+
+class MessageSystem;
+class GameObjectManager;
+class Window;
+class Input;
+class Control;
+class Renderer;
+class TextureManager;
+class Network;
+class NetworkControl;
 
 class Game {
 
@@ -23,7 +24,7 @@ public:
 	~Game();
 
 	void Play();
-	
+
 	sf::Time GetElapsedTime();
 
 private:

@@ -3,6 +3,7 @@
 #include "Definitions.hpp"
 #include "MessageSystem.hpp"
 #include "Input.hpp"
+#include "GameObject.hpp"
 
 Window::Window(const std::shared_ptr<MessageSystem>& l_messageSystem, const std::string& l_title, const sf::Vector2u& l_size, const std::shared_ptr<Input>& l_inputSystem)
 	: Observer(System::S_Window, l_messageSystem)

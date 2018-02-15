@@ -1,6 +1,7 @@
-#include <functional>
-
 #include "MessageSystem.hpp"
+
+#include <functional>
+#include "Message.hpp"
 #include "Util\Utilities.hpp"
 
 

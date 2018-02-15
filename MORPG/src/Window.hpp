@@ -5,8 +5,6 @@
 #include <SFML/Graphics.hpp>
 
 #include "Observer.hpp"
-#include "GameObject.hpp"
-
 
 class Input;
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "GameObject.hpp"
 #include "Observer.hpp"
 #include "Definitions.hpp"
 

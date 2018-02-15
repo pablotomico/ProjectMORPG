@@ -1,4 +1,6 @@
 #include "GameObjectManager.hpp"
+#include "GameObject.hpp"
+
 
 GameObjectManager::GameObjectManager(const std::shared_ptr<MessageSystem>& l_messageSystem, const std::shared_ptr<TextureManager>& l_textureManager)
 	: Observer(System::S_GameObjectManager, l_messageSystem)

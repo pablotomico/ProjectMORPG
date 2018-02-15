@@ -1,6 +1,15 @@
 #include "Game.hpp"
 #include "Definitions.hpp"
+#include "MessageSystem.hpp"
+#include "GameObject.hpp"
+#include "GameObjectManager.hpp"
+#include "Window.hpp"
 #include "Input.hpp"
+#include "Control.hpp"
+#include "Renderer.hpp"
+#include "TextureManager.hpp"
+#include "Network.hpp"
+#include "NetworkControl.hpp"
 
 Game::Game() {
 

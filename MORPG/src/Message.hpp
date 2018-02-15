@@ -4,7 +4,6 @@
 #include <SFML/Window.hpp>
 #include "Systems.hpp"
 #include "Definitions.hpp"
-#include "GameObject.hpp"
 
 #define MULTICAST -1
 

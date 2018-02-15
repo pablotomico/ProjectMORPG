@@ -3,7 +3,8 @@
 #include <unordered_map>
 #include <queue>
 #include "Observer.hpp"
-#include "Message.hpp"
+
+class Message;
 
 class MessageSystem {
 public:

@@ -1,13 +1,13 @@
 #pragma once
 
+#include <memory>
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
-#include <memory>
+
 #include "Definitions.hpp"
-#include "TextureManager.hpp"
 #include "Spell.hpp"
 
-using GameObjectID = unsigned int;
+class TextureManager;
 
 class GameObject {
 public:
@@ -76,4 +76,3 @@ private:
 };
 
 
-using GameObjectContainer = std::unordered_map<GameObjectID, GameObject*>;

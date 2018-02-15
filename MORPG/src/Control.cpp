@@ -1,4 +1,5 @@
 #include "Control.hpp"
+#include "GameObject.hpp"
 #include "Util\Utilities.hpp"
 
 Control::Control(const std::shared_ptr<MessageSystem> & l_messageSystem, const std::shared_ptr<GameObjectContainer>& l_gameObjects)

@@ -1,4 +1,6 @@
 #include "Renderer.hpp"
+#include "Window.hpp"
+#include "GameObject.hpp"
 #include "Util\Utilities.hpp"
 
 Renderer::Renderer(const std::shared_ptr<MessageSystem>& l_messageSystem, const std::shared_ptr<GameObjectContainer>& l_gameObjects, const std::shared_ptr<Window>& l_window)

@@ -1,5 +1,6 @@
 #include "Network.hpp"
 #include "Message.hpp"
+#include "GameObject.hpp"
 #include "Util\Utilities.hpp"
 
 Network::Network(const std::shared_ptr<MessageSystem>& l_messageSystem)
