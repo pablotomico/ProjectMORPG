@@ -1,5 +1,4 @@
 #include "Game.hpp"
-#include "Definitions.hpp"
 #include "MessageSystem.hpp"
 #include "GameObject.hpp"
 #include "GameObjectManager.hpp"
@@ -11,22 +10,7 @@
 #include "Network.hpp"
 #include "NetworkControl.hpp"
 
-Game::Game() {
-
-	m_messageSystem = std::make_shared<MessageSystem>();
-	m_textureManager = std::make_shared<TextureManager>();
-	m_gameObjectManager = std::make_shared<GameObjectManager>(m_messageSystem, m_textureManager);
-	m_gameObjects = m_gameObjectManager->GetGameObjectContainer();
-	m_inputSystem = std::make_shared<Input>(m_messageSystem);
-	m_controlSystem = std::make_shared<Control>(m_messageSystem, m_gameObjects);
-	m_window = std::make_shared<Window>(m_messageSystem, WINDOW_TITLE, sf::Vector2u(WINDOW_DEFAULT_WIDTH, WINDOW_DEFAULT_HEIGHT), m_inputSystem);
-	m_renderSystem = std::make_shared<Renderer>(m_messageSystem, m_gameObjects, m_window);
-	m_networkSystem = std::make_shared<Network>(m_messageSystem);
-	m_networkControlSystem = std::make_shared<NetworkControl>(m_messageSystem);
-
-}
-
-Game::Game(const std::string& l_username) {
+Game::Game(const std::string& l_username = std::string("Unknown")) {
 
 	m_messageSystem = std::make_shared<MessageSystem>();
 	m_textureManager = std::make_shared<TextureManager>();

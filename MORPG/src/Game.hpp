@@ -19,8 +19,7 @@ class NetworkControl;
 class Game {
 
 public:
-	Game();
-	Game(const std::string& username);
+	Game(const std::string& username = std::string("Unknown"));
 	~Game();
 
 	void Play();

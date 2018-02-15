@@ -5,6 +5,7 @@
 
 #include "Message.hpp"
 
+
 class MessageSystem;
 
 using Callback = std::function<void(Message)>;
