@@ -22,7 +22,7 @@ void Window::EndDraw() {
 	m_window.display();
 }
 
-void Window::Update(float l_deltaTime) {
+void Window::Update(const float& l_deltaTime) {
 	sf::Event event;
 	while (m_window.pollEvent(event)) {
 		if (event.type == sf::Event::Closed) {
@@ -50,7 +50,7 @@ void Window::Close() {
 	m_isDone = true;
 }
 
-void Window::Draw(sf::Drawable & l_drawable) {
+void Window::Draw(const sf::Drawable & l_drawable) {
 	m_window.draw(l_drawable);
 }
 
@@ -70,7 +70,7 @@ sf::RenderWindow* Window::GetRenderWindow() {
 	return &m_window;
 }
 
-void Window::Notify(Message l_message) {
+void Window::Notify(const Message& l_message) {
 	if (l_message.m_type == MessageType::M_KeyPressed) {
 
 		if (l_message.m_keyCode == sf::Keyboard::Escape) {

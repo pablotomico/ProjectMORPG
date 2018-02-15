@@ -25,14 +25,12 @@ enum  MessageType {
 };
 
 struct GameObjectMessage {
-	GameObjectMessage(GameObjectID l_id, sf::Vector2f l_position)
+	GameObjectMessage(const GameObjectID& l_id, const sf::Vector2f& l_position)
 		: m_gameObjectID(l_id), m_position(l_position) {}
-	GameObjectMessage(GameObjectID l_id, sf::Vector2f l_position, int l_tick)
+	GameObjectMessage(const GameObjectID& l_id, const sf::Vector2f& l_position, const int& l_tick)
 		: m_gameObjectID(l_id), m_position(l_position), m_tick(l_tick) {}
 
-	void Print() {
-		//LOG("[" << m_gameObjectID << "] (" << m_position.x << ", " << m_position.y << ")");
-	}
+	void Print();
 
 	GameObjectID m_gameObjectID;
 	sf::Vector2f m_position;
@@ -60,11 +58,11 @@ struct PlayerData {
 
 class Message {
 public:
-	Message(MessageType l_type, System l_systemReceiver);
-	Message(MessageType l_type, System l_systemReceiver, const std::string& l_string);
-	Message(MessageType l_type, System l_systemReceiver, KeyCode l_keyCode);
-	Message(MessageType l_type, System l_systemReceiver, GameObjectID l_id, sf::Vector2f l_position);
-	Message(MessageType l_type, System l_systemReceiver, GameObjectID l_id, sf::Vector2f l_position, int l_tick);
+	Message(const MessageType& l_type, const System& l_systemReceiver);
+	Message(const MessageType& l_type, const System& l_systemReceiver, const std::string& l_string);
+	Message(const MessageType& l_type, const System& l_systemReceiver, const KeyCode& l_keyCode);
+	Message(const MessageType& l_type, const System& l_systemReceiver, const GameObjectID& l_id, const sf::Vector2f& l_position);
+	Message(const MessageType& l_type, const System& l_systemReceiver, const GameObjectID& l_id, const sf::Vector2f& l_position, const int& l_tick);
 
 
 	~Message();

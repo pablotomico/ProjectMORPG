@@ -16,12 +16,12 @@ public:
 
 protected:
 	Callback GetNotify() {
-		auto messageListener = [=](Message message) -> void {
+		auto messageListener = [=](const Message& message) -> void {
 			this->Notify(message);
 		};
 		return messageListener;
 	}
-	void Send(Message l_message);
+	void Send(const Message& l_message);
 
 	virtual void Notify(const Message& message) {
 		//LOG("Notify function not implemented");

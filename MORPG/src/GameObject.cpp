@@ -1,7 +1,8 @@
 #include "GameObject.hpp"
 #include "Util/Utilities.hpp"
 
-GameObject::GameObject(GameObjectID l_gameObjectID, std::string l_name, bool l_isDrawable, bool l_isControllable, const std::shared_ptr<TextureManager>& l_textureManager)
+GameObject::GameObject(const GameObjectID& l_gameObjectID, const std::string& l_name,
+	const bool& l_isDrawable, const bool& l_isControllable, const std::shared_ptr<TextureManager>& l_textureManager)
 	: m_id(l_gameObjectID), m_isDrawable(l_isDrawable), m_isControllable(l_isControllable), m_position(sf::Vector2f(0, 0)), m_spriteOffset(sf::Vector2f(0, 50)), m_name(l_name) {
 	m_textureManager = l_textureManager;
 	m_nameText.setString(l_name);
@@ -12,7 +13,7 @@ GameObject::~GameObject() {
 	OnDestroy();
 }
 
-void GameObject::Update(int l_tick, float l_deltaTime) {
+void GameObject::Update(const int& l_tick, const float& l_deltaTime) {
 
 	if (m_castingSpell && m_spellCast.first <= l_tick) {
 		ThrowSpell();
@@ -52,7 +53,7 @@ sf::Text & GameObject::GetNameText() {
 	return m_nameText;
 }
 
-void GameObject::SetPosition(const sf::Vector2f & l_position, int l_tick) {
+void GameObject::SetPosition(const sf::Vector2f & l_position, const int& l_tick) {
 	if (l_tick > -1) {
 		int deltaTick = l_tick - m_netPosition.first;
 		m_netDeltaTime = 0;
@@ -79,11 +80,11 @@ void GameObject::SetSprite(const std::string& l_texture) {
 	}
 }
 
-void GameObject::SetSpriteScale(const float l_x, const float l_y) {
+void GameObject::SetSpriteScale(const float& l_x, const float& l_y) {
 	m_sprite.setScale(l_x, l_y);
 }
 
-void GameObject::CastSpell(int l_endTick, int l_spellID) {
+void GameObject::CastSpell(const int& l_endTick, const int& l_spellID) {
 	if (l_spellID < 0) {
 		m_castingSpell = false;
 		return;
@@ -105,18 +106,11 @@ void GameObject::ThrowSpell() {
 }
 
 
-void GameObject::PredictPosition(int l_tick, float l_deltaTime) {
+void GameObject::PredictPosition(const int& l_tick, const float& l_deltaTime) {
 	int deltaTick = l_tick - m_netPosition.first;
 	m_netDeltaTime += l_deltaTime;
 	m_position.x = m_netPosition.second.x + m_velocity.x * (l_deltaTime + m_timestep * deltaTick);
 	m_position.y = m_netPosition.second.y + m_velocity.y * (l_deltaTime + m_timestep * deltaTick);
-	//printf("Velocity = (%f, %f) l_deltaTime = %f, m_timestep = %f, deltaTick = %d\n", m_velocity.x, m_velocity.y, l_deltaTime, m_timestep, deltaTick);
-	if (m_velocity.x > 0 || m_velocity.y > 0) {
-
-		/*printf("[%d] PREDICTION:\n", m_id);
-		printf("\tLAST POSITION RECEIVED = (%f, %f) ON TICK %d\n", m_netPosition.second.x, m_netPosition.second.y, m_netPosition.first);
-		printf("\tPOSITION PREDICTED     = (%f, %f) ON TICK %d VELOCITY = (%f, %f)\n\n", m_position.x, m_position.y, l_tick, m_velocity.x, m_velocity.y);*/
-	}
 }
 
 bool GameObject::IsDrawable() {

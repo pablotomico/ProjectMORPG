@@ -19,21 +19,21 @@ public:
 	void BeginDraw(); // Clear the window.
 	void EndDraw(); // Display the changes.
 
-	void Update(float l_deltaTime);
+	void Update(const float& l_deltaTime);
 
 	bool IsDone();
 	bool IsFocused();
 
 	void Close();
 
-	void Draw(sf::Drawable& l_drawable);
+	void Draw(const sf::Drawable& l_drawable);
 	void UpdateCamera(GameObject* l_target);
 
 	sf::Vector2u GetWindowSize();
 	sf::RenderWindow* GetRenderWindow();
 
 protected:
-	void Notify(Message l_message);
+	void Notify(const Message& l_message);
 
 private:
 	void Setup(const std::string l_title, const sf::Vector2u& l_size);

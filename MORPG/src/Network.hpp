@@ -13,7 +13,7 @@
 class Network : public Observer {
 public:
 	Network(const std::shared_ptr<MessageSystem>& l_messageSystem);
-	Network(const std::shared_ptr<MessageSystem>& l_messageSystem, std::string l_username);
+	Network(const std::shared_ptr<MessageSystem>& l_messageSystem, const std::string& l_username);
 	~Network();
 
 	void Update();

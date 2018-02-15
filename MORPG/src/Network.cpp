@@ -27,7 +27,7 @@ Network::Network(const std::shared_ptr<MessageSystem>& l_messageSystem)
 	LOG("Network system initialized!");
 }
 
-Network::Network(const std::shared_ptr<MessageSystem>& l_messageSystem, std::string l_username)
+Network::Network(const std::shared_ptr<MessageSystem>& l_messageSystem, const std::string& l_username)
 	: Observer(System::S_Network, l_messageSystem)
 	, m_serverAddress(SERVERIP, SERVERPORT)
 	, m_client(-1)

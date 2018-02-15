@@ -10,10 +10,10 @@ public:
 	MessageSystem();
 	~MessageSystem();
 
-	void AddObserver(System l_system, Callback l_callback);
-	void RemoveObserver(System l_system);
+	void AddObserver(const System& l_system, const Callback& l_callback);
+	void RemoveObserver(const System& l_system);
 
-	void Send(Message l_message);
+	void Send(const Message& l_message);
 	void DispatchMessages();
 
 private:

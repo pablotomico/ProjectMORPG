@@ -8,9 +8,9 @@ namespace net {
 		TCPSocket();
 
 		bool Listen();
-		bool Connect(Address l_address);
+		bool Connect(const Address& l_address);
 		SOCKET Accept(Address& l_clientAddress, int* l_size);
-		int Send(const void* l_data, std::size_t l_size);
-		int Receive(void* l_data, std::size_t l_size);
+		int Send(const void* l_data, const std::size_t& l_size);
+		int Receive(void* l_data, const std::size_t& l_size);
 	};
 }

@@ -12,7 +12,7 @@ Renderer::Renderer(const std::shared_ptr<MessageSystem>& l_messageSystem, const 
 
 Renderer::~Renderer() {}
 
-void Renderer::Update(float l_deltaTime) {}
+void Renderer::Update(const float& l_deltaTime) {}
 
 void Renderer::Render() {
 

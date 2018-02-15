@@ -5,6 +5,6 @@ Observer::Observer(const System& l_system, const std::shared_ptr<MessageSystem>&
 	m_messageSystem->AddObserver(m_system, GetNotify());
 }
 
-void Observer::Send(Message l_message) {
+void Observer::Send(const Message& l_message) {
 	m_messageSystem->Send(l_message);
 }

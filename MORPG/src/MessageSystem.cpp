@@ -8,16 +8,16 @@ MessageSystem::MessageSystem() {}
 
 MessageSystem::~MessageSystem() {}
 
-void MessageSystem::AddObserver(System l_system, Callback l_callback) {
+void MessageSystem::AddObserver(const System& l_system, const Callback& l_callback) {
 	//LOG("Adding observer: " << l_system);
 	m_observers[l_system] = l_callback;
 }
 
-void MessageSystem::RemoveObserver(System l_system) {
+void MessageSystem::RemoveObserver(const System& l_system) {
 	m_observers.erase(l_system);
 }
 
-void MessageSystem::Send(Message l_message) {
+void MessageSystem::Send(const Message& l_message) {
 	m_msgQueue.push(l_message);
 }
 

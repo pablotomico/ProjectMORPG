@@ -10,7 +10,7 @@ Control::Control(const std::shared_ptr<MessageSystem> & l_messageSystem, const s
 
 Control::~Control() {}
 
-void Control::SetControlledGameObject(GameObjectID l_controlledGameObject) {
+void Control::SetControlledGameObject(const GameObjectID& l_controlledGameObject) {
 	if (m_gameObjects->at(l_controlledGameObject)->IsControllable()) {
 		m_controlledGameObject = l_controlledGameObject;
 	}
@@ -20,7 +20,7 @@ GameObjectID Control::GetControlledGameObject() {
 	return m_controlledGameObject;
 }
 
-void Control::Update(float l_deltaTime) {
+void Control::Update(const float& l_deltaTime) {
 	GameObject* gameObject = m_gameObjects->at(m_controlledGameObject);
 	if (m_moving) {
 		//printf("Movement (%f, %f)\n", m_movement.x, m_movement.y);

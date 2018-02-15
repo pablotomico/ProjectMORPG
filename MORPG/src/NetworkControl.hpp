@@ -7,13 +7,13 @@ public:
 	NetworkControl(const std::shared_ptr<MessageSystem>& l_messageSystem);
 
 private:
-	void RegisterClient(int l_clientID);
-	void RegisterClient(int l_clientID, const std::string& l_username);
-	void AddClientGameObject(int l_clientID, GameObjectID l_gameObjectID);
-	void UpdateClient(int l_clientID, float l_x, float l_y, int l_tick);
-	void RemoveClient(int l_clientID);
+	void RegisterClient(const int& l_clientID);
+	void RegisterClient(const int& l_clientID, const std::string& l_username);
+	void AddClientGameObject(const int& l_clientID, const GameObjectID& l_gameObjectID);
+	void UpdateClient(const int& l_clientID, const float& l_x, const float& l_y, const int& l_tick);
+	void RemoveClient(const int& l_clientID);
 
-	bool HasClient(int l_clientID);
+	bool HasClient(const int& l_clientID);
 protected:
 	void Notify(const Message& l_message);
 

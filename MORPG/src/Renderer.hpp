@@ -10,7 +10,7 @@ public:
 	Renderer(const std::shared_ptr<MessageSystem>& l_messageSystem, const std::shared_ptr<GameObjectContainer>& l_gameObjects, const std::shared_ptr<Window>& l_window);
 	~Renderer();
 
-	void Update(float l_deltaTime);
+	void Update(const float& l_deltaTime);
 	void Render();
 
 protected:

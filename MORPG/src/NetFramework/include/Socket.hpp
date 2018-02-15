@@ -28,7 +28,7 @@ namespace net {
 			}
 		}
 
-		void Bind(Address l_address) {
+		void Bind(const Address& l_address) {
 			//LOG("Bind(Address): " << inet_ntoa(l_address.m_address.sin_addr) << ":"<< ntohs(l_address.m_address.sin_port));
 			if (bind(m_socket, (const sockaddr *)&l_address.m_address, sizeof(l_address.m_address)) < 0) {
 				DEBUG("Bind(Address) failed");
@@ -40,7 +40,7 @@ namespace net {
 			getsockname(m_socket, (sockaddr *)&l_address.m_address, &size);
 		}
 
-		void SetBlocking(bool l_blocking) {
+		void SetBlocking(const bool& l_blocking) {
 			unsigned long on = (l_blocking == false);
 			if (0 != ioctlsocket(m_socket, FIONBIO, &on)) {
 				DEBUG("SetBlocking failed");

@@ -9,10 +9,10 @@ public:
 	Control(const std::shared_ptr<MessageSystem> & l_messageSystem, const std::shared_ptr<GameObjectContainer>& l_gameObjects);
 	~Control();
 
-	void SetControlledGameObject(GameObjectID l_controlledGameObject);
+	void SetControlledGameObject(const GameObjectID& l_controlledGameObject);
 	GameObjectID GetControlledGameObject();
 
-	void Update(float l_deltaTime);
+	void Update(const float& l_deltaTime);
 
 protected:
 	void Notify(const Message& l_message);
