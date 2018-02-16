@@ -14,7 +14,7 @@ public:
 	Window(const std::shared_ptr<MessageSystem>& l_messageSystem, const std::string& l_title, const sf::Vector2u& l_size, const std::shared_ptr<Input>& l_inputSystem);
 	~Window();
 
-	void BeginDraw(); // Clear the window.
+	void BeginDraw() noexcept; // Clear the window.
 	void EndDraw(); // Display the changes.
 
 	void Update(const float& l_deltaTime);

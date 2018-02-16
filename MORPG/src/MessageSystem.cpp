@@ -27,8 +27,8 @@ void MessageSystem::DispatchMessages() {
 		Message msg = m_msgQueue.front();
 		m_msgQueue.pop();
 		if (msg.m_systemReceiver == MULTICAST) {
-			for (auto& it = m_observers.begin(); it != m_observers.end(); it++) {
-				(m_observers[it->first])(msg);
+			for (auto& e : m_observers) {
+				(m_observers[e.first])(msg);
 			}
 		}
 		else {

@@ -10,7 +10,7 @@
 #include "Network.hpp"
 #include "NetworkControl.hpp"
 
-Game::Game(const std::string& l_username = std::string("Unknown")) {
+Game::Game(const std::string& l_username) {
 
 	m_messageSystem = std::make_shared<MessageSystem>();
 	m_textureManager = std::make_shared<TextureManager>();

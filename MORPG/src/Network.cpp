@@ -215,7 +215,6 @@ void Network::WriteUDP() {
 		else {
 			return;
 		}
-		//printf("ME: [%d] -> (%f, %f)\n", message.m_data.m_clientID, message.m_data.x, message.m_data.y);
 	}
 }
 
@@ -269,7 +268,6 @@ void Network::ProcessMessage(const NetMessage* l_message) {
 	}
 	break;
 	case NetMessage::Type::DATA:
-		//printf("\t\t[T%d]SERVER: [%d] -> (%f, %f)\n", msg.m_tick, msg.m_data.m_clientID, msg.m_data.x, msg.m_data.y);
 		if (l_message->m_data.m_clientID != m_client) {
 			Message msg(MessageType::M_Player, System::S_NetworkControl, l_message->m_data.m_clientID, sf::Vector2f(l_message->m_data.x, l_message->m_data.y), l_message->m_tick);
 			Send(msg);

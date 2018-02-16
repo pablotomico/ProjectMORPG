@@ -18,8 +18,9 @@ void Renderer::Update(const float& l_deltaTime) {}
 
 void Renderer::Render() {
 
-	for (auto& it = m_gameObjects->begin(); it != m_gameObjects->end(); it++) {
-		GameObject* go = it->second;
+
+	for (auto& e : *m_gameObjects) {
+		GameObject* go = e.second;
 
 		if (!go->IsDrawable()) {
 			continue;
